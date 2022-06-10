@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/widget_margin">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.28"
+        >
+
+        <TextView
+            android:id="@+id/appwidget_pregunta_o_respuesta"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/btn_primary"
+            android:gravity="center_horizontal|center_vertical"
+            android:maxLines="1"
+            android:text="@string/respuesta"
+            android:paddingEnd="40dp"
+            android:textSize="8.5pt"
+            android:textStyle="bold|italic" />
+
+        <ImageView
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="@drawable/abc_vector_test"
+            android:rotation="180"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/colorPrimaryDark"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/appwidget_tipo_PoR"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="@drawable/btn_primary"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/pregunta"
+        android:textSize="7pt"
+        android:textStyle="bold|italic" />
+</LinearLayout>

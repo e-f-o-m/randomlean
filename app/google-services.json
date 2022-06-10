@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "501144759133",
+    "project_id": "randomlearnapp",
+    "storage_bucket": "randomlearnapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501144759133:android:3f70f43b5dede230d796b4",
+        "android_client_info": {
+          "package_name": "com.efom.randomlearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501144759133-tcnhcrnkp9ogur6rvocvv8gmrn1nf7u1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2jfBEshKM_ZiEadL4Y6YAof0Z8KnmHts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501144759133-tcnhcrnkp9ogur6rvocvv8gmrn1nf7u1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

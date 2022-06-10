@@ -1,0 +1,52 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="textSetting">18sp</dimen>
+    <dimen name="topSetting">16dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+
+
+    <!-- SOBRAS TARJETA -->
+    <dimen name="border_width">2dp</dimen>
+    <dimen name="corner">16dp</dimen>
+    <dimen name="corner_dark">16dp</dimen>
+    <dimen name="corner_light">30dp</dimen>
+    <dimen name="corner_max">40dp</dimen>
+
+    <dimen name="topDark">16dp</dimen>
+    <dimen name="buttonDark">0dp</dimen>
+    <dimen name="leftDark">0dp</dimen>
+    <dimen name="rigthDark">5dp</dimen>
+
+    <dimen name="topLight">0dp</dimen>
+    <dimen name="buttonLight">5dp</dimen>
+    <dimen name="leftLight">0dp</dimen>
+    <dimen name="rigthLight">-355dp</dimen>
+
+
+    <!-- Tarjeta parte frontal principal -->
+    <dimen name="ibottom">5dp</dimen>
+    <dimen name="ileft">0.4dp</dimen>
+    <dimen name="iright">350dp</dimen>
+    <dimen name="itop">5dp</dimen>
+
+    <dimen name="cBottomRight">500dp</dimen>
+    <dimen name="cTopRight">500dp</dimen>
+    <dimen name="cBottomLeft">24dp</dimen>
+    <dimen name="cTopLeft">24dp</dimen>
+
+
+
+    <!-- Dimenciones icos -->
+    <dimen name="widthIcosLista">40dp</dimen>
+    <dimen name="heiIcosLista">45dp</dimen>
+    <dimen name="marginV_icosList">8dp</dimen>
+
+
+
+</resources>

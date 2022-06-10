@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginTop="1dp"
+    style="@style/card_main_bg"
+    android:elevation="2dp"
+    >
+
+    <TextView
+        android:id="@+id/tVItem_CM"
+        android:layout_width="40dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/oval"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="10"
+        android:textColor="@color/text_d"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tVNombre_CM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="2dp"
+        android:layout_toRightOf="@+id/tVItem_CM"
+        android:paddingTop="4dp"
+        style="@style/card_main_title"
+        android:text="Nombre de la lista"
+        android:textAlignment="center"
+        />
+
+    <TextView
+        android:id="@+id/tVTAprendidos_CM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tVNombre_CM"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="110dp"
+        android:layout_toRightOf="@+id/tVItem_CM"
+        android:text="APRENDIDOS: 0"
+        android:textSize="11sp"
+        android:textStyle="italic"
+        android:textColor="@color/text_l"
+        />
+
+    <TextView
+        android:id="@+id/tVTTotal_CM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tVTAprendidos_CM"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="110dp"
+        android:layout_marginBottom="5dp"
+        android:paddingBottom="8dp"
+        android:layout_toRightOf="@+id/tVItem_CM"
+        android:text="ESTUDIANDO: 20 / 1000"
+        android:textSize="11sp"
+        android:textStyle="italic"
+        android:textColor="@color/text_l"
+        />
+
+    <ImageButton
+        android:id="@+id/imgBtn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/imgBtn_play"
+        android:background="#0AFFFFFF"
+        android:padding="16dp"
+        android:src="@android:drawable/ic_menu_edit" />
+
+    <ImageButton
+        android:id="@+id/imgBtn_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:background="#0AFFFFFF"
+        android:padding="16dp"
+        android:src="@android:drawable/ic_media_play" />
+
+</RelativeLayout>

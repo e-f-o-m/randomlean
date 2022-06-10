@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="59dp"
+    android:layout_marginTop="1dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginLeft="3dp"
+    style="@style/card_main_bg"
+    >
+
+
+    <TextView
+        android:id="@+id/tVItemCunt_CL"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:paddingHorizontal="4dp"
+        android:text="10"
+        android:textSize="12sp"
+        android:textColor="@color/text_siempre_banco"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/oval"
+        android:layout_marginStart="5dp"
+        />
+
+
+    <TextView
+        android:id="@+id/tVItemPregunta_CL"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="pregunta"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:maxLength="50"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/text_l"
+        />
+
+    <TextView
+        android:id="@+id/tVItemRespuesta_CL"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/tVItemPregunta_CL"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:maxLength="50"
+        android:paddingBottom="4dp"
+        android:text="respuesta"
+        android:textSize="12sp"
+        android:textColor="@color/text_l"
+        />
+</RelativeLayout>

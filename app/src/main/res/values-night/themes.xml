@@ -1,0 +1,103 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Theme.AppCompat.Light.NoActionBa">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="RatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingbar_difficulty</item>
+    </style>
+
+
+
+    <style name="mTextSetting">
+        <item name="android:textSize">@dimen/textSetting</item>
+        <item name="android:fontFamily">Vernada</item>
+        <item name="android:textColor">@color/text_l</item>
+        <item name="android:textColorHint">#BDBDBD</item>
+    </style>
+
+    <style name="mSizeText">
+        <item name="android:textSize">52sp</item>
+    </style>
+    <style name="temamaht">
+        <item name="android:textSize">@dimen/ambilwarna_hueWidth</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="card_main_bg">
+        <item name="android:background">@drawable/tarjeta_dark</item>
+    </style>
+    <style name="card_main_title">
+        <item name="android:shadowDx">-1</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:shadowColor">#9F2F403A</item>
+        <item name="android:textColor">@color/text_d</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="green">
+        <item name="android:background">@drawable/border_tolboard_dark</item>
+    </style>
+
+    <color name="colorPrimary">#e0f9fa</color>
+    <color name="colorPrimaryDark">#6a7a99</color>
+    <color name="colorAccent">#e78c4c</color>
+
+    <color name="colorTransp">#00FFFFFF</color>
+
+    <color name="colorCardRandom">#555555</color>
+
+
+    <color name="gradienteL6">#e8e9ee</color>
+    <color name="gradienteL5">#EDEEEF</color>
+    <color name="gradienteL4">#EBEBEB</color>
+    <color name="gradienteL3">#F2F2F2</color>
+    <color name="gradienteL2">#F8F8F8</color>
+    <color name="gradienteL1">#FFFFFF</color>
+
+    <color name="gradienteD6">#05000000</color>
+    <color name="gradienteD5">#05000000</color>
+    <color name="gradienteD4">#05000000</color>
+    <color name="gradienteD3">#05000000</color>
+    <color name="gradienteD2">#05000000</color>
+    <color name="gradienteD1">#05000000</color>
+
+
+    <!--fondo main -->
+    <color name="fondoStart">#3C3C3C</color>
+    <color name="fondoCenter">#333333</color>
+    <color name="fondoEnd">#303030</color>
+
+    <color name="fondoStartC">#3A3A3A</color>
+    <color name="fondoCenterC">#2B2B2B</color>
+    <color name="fondoEndC">#252525</color>
+
+    <color name="danger">#B61537</color>
+    <color name="warning">#D1B212</color>
+    <color name="primary">#0091EA</color>
+    <color name="success">#07AE66</color>
+
+    <color name="background">#2B2B2B</color>
+    <color name="text_l">#F8F8F8</color>
+    <color name="text_d">#DDDDDD</color>
+    <color name="cards">#353535</color>
+    <color name="text_opuesto">#292929</color>
+    <color name="text_siempre_banco">#FFFFFF</color>
+    <color name="text_hint">#BABABA</color>
+    <color name="tarjet_bg">#535353</color>
+
+</resources>

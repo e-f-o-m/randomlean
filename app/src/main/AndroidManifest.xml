@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:name=".MainActivity"
+    package="com.efom.randomlearn"
+    android:hardwareAccelerated="true">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:requestLegacyExternalStorage="true"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning"
+        >
+        <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBa"
+            android:exported="true"
+            android:name=".ListsWebActivity"
+            >
+
+        </activity>
+        <activity android:name=".LoginActivity" android:exported="true" />
+
+            <!--
+        <receiver android:name=".WidgetPreguntas">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/preguntas_widget_info" />
+        </receiver>
+                -->
+
+        <activity
+            android:name=".SettingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBa"
+            />
+            <!--android:noHistory="false"-->
+            <!--android:screenOrientation="fullSensor"-->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBa">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".ListActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBa"
+            android:requestLegacyExternalStorage="true"
+            />
+
+            <!--android:screenOrientation="portrait"-->
+        <activity
+            android:name=".RandomActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBa" />
+        <activity android:name=".EditActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.efom.randomlearn"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

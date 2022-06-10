@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:auto="http://schemas.android.com/tools"
+    app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="10dp"
+    >
+
+    <!--Pregunta-->
+    <RelativeLayout
+        android:id="@+id/RLTarjetaPregunta_RD"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/TVNum_RDA"
+        android:background="@color/tarjet_bg"
+        android:layout_centerVertical="true"
+        android:visibility="visible"
+        android:padding="2dp"
+        >
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/mVPregunta_RD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textAlignment="viewEnd"
+            android:theme="@style/temamaht"
+            android:padding="6dp"
+            auto:engine="KaTeX"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/tVPregunta_RD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textColor="@color/text_l"
+            />
+        <ImageView
+            android:id="@+id/imgVPregunta_RD"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:textAlignment="viewEnd"
+            android:visibility="gone"
+            />
+
+
+        <ImageView
+            android:id="@+id/imgVTalkQuestion_RD"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:drawable/ic_lock_silent_mode_off"
+            android:backgroundTint="@color/text_hint"
+            android:padding="8dp"
+            android:textAlignment="viewEnd" />
+
+        <TextView
+            android:id="@+id/tVBarPregunta_RDA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_horizontal"
+            android:background="@color/background"
+            android:text="PREGUNTA"
+            />
+    </RelativeLayout>
+
+    <!--Respuesta-->
+    <RelativeLayout
+        android:id="@+id/RLTarjetaRespuesta_RD"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:padding="2dp"
+        android:background="@color/tarjet_bg"
+        >
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/mVRespuesta_RD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textAlignment="viewEnd"
+            android:theme="@style/temamaht"
+            auto:engine="KaTeX"
+            android:padding="10dp"
+            android:nestedScrollingEnabled="true"
+            android:scrollbars="horizontal"
+            />
+        <TextView
+            android:id="@+id/tVRespuesta_RD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/text_l"
+            />
+        <ImageView
+            android:id="@+id/imgVRespuesta_RD"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:textAlignment="viewEnd"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/imgVTalkResponse_RD"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:drawable/ic_lock_silent_mode_off"
+            android:backgroundTint="@color/text_hint"
+            android:textAlignment="viewEnd"
+            android:padding="8dp"
+            android:layout_marginTop="16dp"
+            />
+
+        <TextView
+            android:id="@+id/tVBarRespuesta_RDA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="RESPUESTA"
+            android:layout_marginBottom="2dp"
+            />
+    </RelativeLayout>
+    <!--TARJETA-->
+
+</androidx.cardview.widget.CardView>

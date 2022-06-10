@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <FrameLayout
+        android:id="@+id/fLInfoMasivo_AE"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="10pt"
+            android:gravity="center"
+            android:textAlignment="inherit"
+            android:text="Formato:\n\npregunta;respuesta\nno llenar nada mas\nMarcar Masivo y Nuevo\nAceptar"
+            android:textColor="@color/text_l"
+            />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <FrameLayout
+                android:id="@+id/FL_containerCapture_EA"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imgV_captura_EA"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/cbFormaMasivaEd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnSiguienteEd"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="2dp"
+                    android:background="@drawable/border_input"
+                    android:padding="10dp"
+                    android:text="Masivo"
+                    android:textColor="@color/text_l" />
+                <ImageView
+                    android:id="@+id/imgBtnInfo_EA"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:background="@android:drawable/ic_dialog_info"
+                    android:backgroundTint="@color/text_hint"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100">
+
+                    <EditText
+                        android:id="@+id/etPreguntaEd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pregunta"
+                        android:padding="10dp"
+                        android:textColor="@color/text_l"
+                        android:textColorHint="@color/text_d"
+                        />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/imgBtnCameraPregunta_Ed"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="#000000" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100">
+
+                    <EditText
+                        android:id="@+id/etRespuestaEd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/respuesta"
+                        android:padding="10dp"
+                        android:textColor="@color/text_l"
+                        android:textColorHint="@color/text_d"
+                        />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/imgBtnCameraRespuesta_Ed"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_toRightOf="@+id/imgBtnReresetStars_LA"
+                    android:layout_weight="1"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="#000000" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <EditText
+                    android:id="@+id/etObservacionEd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Observación"
+                    android:padding="10dp"
+                    android:textColor="@color/text_l"
+                    android:textColorHint="@color/text_d"
+                    />
+            </LinearLayout>
+
+            <RatingBar
+                android:id="@+id/raBrDificultadEd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:numStars="5"
+                android:rating="5">
+
+            </RatingBar>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnColorEd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#8B8B8B"
+                android:text="COLOR"
+                android:textColor="#B5FFE3"
+                android:textStyle="bold"
+
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnCancelarEd"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_warning"
+                    android:shadowColor="@color/warning"
+                    android:shadowDx="0.1"
+                    android:shadowDy="0.1"
+                    android:shadowRadius="0.4"
+                    android:text="CANCELAR"
+                    android:textColor="@color/warning"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAplicarEd"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/btn_success"
+                    android:shadowColor="#005355"
+                    android:shadowDx="0.1"
+                    android:shadowDy="0.1"
+                    android:shadowRadius="0.4"
+                    android:text="ACEPTAR"
+                    android:textColor="@color/success" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnEliminarEd"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnAplicarEd"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/btn_danger"
+                    android:shadowColor="#660000"
+                    android:shadowDx="0.1"
+                    android:shadowDy="0.1"
+                    android:shadowRadius="0.4"
+                    android:text="eliminar"
+                    android:textColor="@color/danger" />
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSiguienteEd"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnAplicarEd"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/btn_success"
+                    android:shadowColor="#006163"
+                    android:shadowDx="0.1"
+                    android:shadowDy="0.1"
+                    android:shadowRadius="0.4"
+                    android:text="Guarda y sigue"
+                    android:textColor="@color/success"
+                    />
+
+
+                <CheckBox
+                    android:id="@+id/cbNuevoEd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnSiguienteEd"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/border_input"
+                    android:padding="18dp"
+                    android:text="Nuevo"
+                    android:textColor="@color/text_l" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
+
