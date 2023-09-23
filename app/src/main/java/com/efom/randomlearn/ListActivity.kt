@@ -1,7 +1,6 @@
 package com.efom.randomlearn
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -22,43 +21,37 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.efom.randomlearn.Adapters.Lista.AdapVH_Lista
-import com.efom.randomlearn.MODELS.Lista
-import com.efom.randomlearn.MODELS.Tarjeta
-import com.efom.randomlearn.SQLITE.DBSQLite
-import com.efom.randomlearn.Utiles.CONST
-import com.efom.randomlearn.Utiles.ConstFIREBASE
-import com.google.firebase.auth.FirebaseAuth
+import com.efom.randomlearn.adapters.targets.AdapVH_Lista
+import com.efom.randomlearn.models.Metadata
+import com.efom.randomlearn.models.Card
+import com.efom.randomlearn.utils.CONSTS
+import com.efom.randomlearn.database.MyDB
+/*import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.opencsv.CSVWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
+import com.google.firebase.ktx.Firebase*/
+import java.io.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ListActivity : AppCompatActivity(), View.OnClickListener {
     private var adapVH_Lista: AdapVH_Lista? = null
     var recyclerView: RecyclerView? = null
-    private var DBSQLite: DBSQLite? = null
-    private var context: Context? = null
+    lateinit var db: MyDB
     var prefs: SharedPreferences? = null
     var editor: SharedPreferences.Editor? = null
-    private var listTarjetas: ArrayList<Tarjeta>? = null
+    private var listCards: ArrayList<Card>? = null
     private var id_lista = 0
     private var nombre_lista = ""
-    private val constFR = ConstFIREBASE()
-    private lateinit var auth: FirebaseAuth
-    private var userName = ""
-    private lateinit var pathHome: String
-    private lateinit var directorioRandomSD: String
+
+    //private val constFR = ConstFIREBASE()
+    /*TODO private lateinit var auth: FirebaseAuth*/
     //donde se guarda la foto
     var separador: String? = null
     var currentPhotoPath: String? = null
@@ -70,16 +63,20 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
     var title_LWA: TextView? = null
     var etSearch_LA: EditText? = null
     var etSearch_LWA: EditText? = null
+    lateinit var path: String
+    lateinit var nameFile: String
 
-    private lateinit var dbFrb: DatabaseReference
+    lateinit var metadata: Metadata
 
+
+    /*TODO private lateinit var dbFrb: DatabaseReference*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
-        imgActions_LA  = findViewById(R.id.imgActions_LA)
-        imgBtnAdd_LA  = findViewById(R.id.imgBtnAdd_LA)
-        imgVSearch_LA  = findViewById(R.id.imgVSearch_LA)
+        imgActions_LA = findViewById(R.id.imgActions_LA)
+        imgBtnAdd_LA = findViewById(R.id.imgBtnAdd_LA)
+        imgVSearch_LA = findViewById(R.id.imgVSearch_LA)
         title_LA = findViewById(R.id.title_LA)
         title_LWA = findViewById(R.id.title_LWA)
         etSearch_LA = findViewById(R.id.etSearch_LA)
@@ -89,12 +86,9 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         imgBtnAdd_LA!!.setOnClickListener(this)
         imgVSearch_LA!!.setOnClickListener(this)
 
-        context = applicationContext
-        DBSQLite = DBSQLite(context)
+        db = MyDB.getDB(applicationContext)!!
         prefs = getSharedPreferences("mPreferences", MODE_PRIVATE)
         separador = prefs!!.getString("separador", ";").toString()
-        pathHome = prefs!!.getString("path_home", ";").toString()
-        directorioRandomSD = getString(R.string.carpeta)
 
 
         inputSearchList()
@@ -102,14 +96,18 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         if (intent.extras != null) {
             id_lista = intent.getIntExtra(getString(R.string.id_lista), -1)
             nombre_lista = intent.getStringExtra(getString(R.string.nombre_lista)).toString()
-            listTarjetas = DBSQLite!!.getTarjetas(id_lista)
+            listCards = ArrayList(db.cardsDAO().getAllByMetadata(id_lista))
+
+            metadata = db.metadataDAO().getById(id_lista)
+            path = metadata.path!!
+            nameFile = metadata.name!!
         }
 
-        setupRefreshRcVw(listTarjetas)
+        setupRefreshRcVw(listCards)
         checkExternalStoragePermission()
 
-        auth = FirebaseAuth.getInstance()
-        userFirebase()
+        //auth = FirebaseAuth.getInstance()
+        /*userFirebase()*/
 
 
         //FIXME: btn Learn dialog
@@ -132,12 +130,10 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        if (savedInstanceState != null) {
-            super.onRestoreInstanceState(savedInstanceState)
-        }
-        id_lista = savedInstanceState!!.getInt(getString(R.string.id_lista), -1)
-        nombre_lista = savedInstanceState!!.getString(getString(R.string.nombre_lista)).toString()
-        listTarjetas = DBSQLite!!.getTarjetas(id_lista)
+        super.onRestoreInstanceState(savedInstanceState)
+        id_lista = savedInstanceState.getInt(getString(R.string.id_lista), -1)
+        nombre_lista = savedInstanceState.getString(getString(R.string.nombre_lista)).toString()
+        listCards = ArrayList(db.cardsDAO().getAllByMetadata(id_lista))
     }
 
 
@@ -148,20 +144,20 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun setupRefreshRcVw(listTarjetas: ArrayList<Tarjeta>?) {
+    private fun setupRefreshRcVw(listCards: ArrayList<Card>?) {
         adapVH_Lista = AdapVH_Lista(this)
         recyclerView = findViewById(R.id.recycler_lista)
-        recyclerView!!.layoutManager = LinearLayoutManager(context)
+        recyclerView!!.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView!!.adapter = adapVH_Lista
-        for (i in listTarjetas!!.indices) {
-            adapVH_Lista!!.addLista(listTarjetas[i])
+        for (i in listCards!!.indices) {
+            adapVH_Lista!!.addLista(listCards[i])
         }
     }
 
     override fun onStart() {
         super.onStart()
-        listTarjetas = DBSQLite!!.getTarjetas(id_lista)
-        setupRefreshRcVw(listTarjetas)
+        listCards = ArrayList(db.cardsDAO().getAllByMetadata(id_lista))
+        setupRefreshRcVw(listCards)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -181,12 +177,12 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                         R.array.actions
                     ) { dialog, which ->
                         when (which) {
-                            0 -> eliminar();
-                            1 -> renombrar();
-                            2 -> exportar();
-                            3 -> reresetSt();
-                            4 -> download();
-                            5 -> upload();
+                            0 -> eliminar()
+                            1 -> renombrar()
+                            2 -> exportar()
+                            3 -> reresetSt()
+                            /*4 -> download();
+                            5 -> upload();*/
                         }
                         dialog.dismiss()
                         //Toast.makeText(this, "test $which", Toast.LENGTH_SHORT).show()
@@ -253,12 +249,12 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                 val checkBox = v.findViewById<CheckBox>(R.id.checkbox_DDL)
 
                 if (checkBox.isChecked) {
-                    deleteFirebase()
+                    //todo deleteFirebase()
                 }
-                DBSQLite!!.deleteLista(id_lista)
+                db.metadataDAO().delete(metadata)
                 editor = prefs!!.edit()
                 editor!!.putInt("lista_widget", -1)
-                Toast.makeText(context, "Lista eliminada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Lista eliminada", Toast.LENGTH_SHORT).show()
 
                 startActivity(Intent(this@ListActivity, MainActivity::class.java))
                 dialogInterface.dismiss()
@@ -268,42 +264,41 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun renombrar() {
-        val nombreLista = EditText(this)
-        nombreLista.hint = DBSQLite!!.getListaName(id_lista)
-        nombreLista.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+        val eTNameFile = EditText(this)
+        eTNameFile.hint = metadata.name
+        eTNameFile.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         AlertDialog.Builder(this).setMessage("Renombrar Lista")
-            .setView(nombreLista)
+            .setView(eTNameFile)
             .setPositiveButton("Aceptar") { dialogInterface, i ->
                 /** RENOMBRAR CARPETA  */
-//                            /** RENOMBRAR CARPETA  */
-                val file = File(
-                    Environment.getExternalStorageDirectory()
-                        .toString() + "/RANDOM/" + DBSQLite!!.getListaName(id_lista), ""
-                )
-                val file2 = File(
-                    Environment.getExternalStorageDirectory()
-                        .toString() + "/RANDOM/" + nombreLista.text.toString().trim { it <= ' ' },
-                    ""
-                )
+                //** RENOMBRAR CARPETA  */
+                val file = File("$path/$nombre_lista", "")
+
+                val file2 = File("$path/${eTNameFile.text.toString().trim()}", "")
 
                 //Validar, sino no guardar en la base de datos
+                Log.i(
+                    " 📌 282",
+                    "ListActivity🥚renombrar🍄ruta: $path/${eTNameFile.text.toString().trim()}"
+                )
                 if (file.renameTo(file2)) {
-                    DBSQLite!!.updateNameLista(
-                        Lista(
+                    nameFile = eTNameFile.text.toString().trim { it <= ' ' }
+                    db.metadataDAO().update(
+                        Metadata(
                             id_lista,
-                            nombreLista.text.toString().trim { it <= ' ' },
-                            "#ffffff",
-                            "#ffffff",
+                            nameFile,
+                            path,
                             "",
                             "",
-                            -1,
-                            "00:00",
-                            CONST.ACTIVO
+                            null,
+                            false,
+                            CONSTS.TEXTO_DB,
+                            CONSTS.ENABLED,
+                            null,
+                            null,
                         )
-
-
                     )
-                    this.nombre_lista = nombreLista.text.toString().trim { it <= ' ' }
+                    this.nombre_lista = eTNameFile.text.toString().trim { it <= ' ' }
                 } else {
                     Toast.makeText(
                         applicationContext,
@@ -329,14 +324,16 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
     fun reresetSt() {
         AlertDialog.Builder(this).setMessage(getString(R.string.dialog_reiniciar_estrellas))
             .setPositiveButton("Aceptar") { dialogInterface, _ ->
-                DBSQLite!!.updateResetStars(5.0, id_lista)
-                Toast.makeText(applicationContext, "Dificultad reiniciada 5", Toast.LENGTH_SHORT).show()
+                db.cardsDAO().updateResetAll(id_lista)
+                Toast.makeText(applicationContext, "Dificultad reiniciada 5", Toast.LENGTH_SHORT)
+                    .show()
                 dialogInterface.dismiss()
             }.setNegativeButton("Cancelar") { dialogInterface, _ -> dialogInterface.dismiss() }
             .show()
     }
 
     //FIXME: nombre
+    /*
     fun download() {
         if (!userName.isNullOrEmpty()) {
             dbFrb = Firebase.database.reference
@@ -364,14 +361,14 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                                 pojo_tarjeta.id_tarjeta =
                                     it.child(constFR.ID_TARJETA).value.toString().toInt()
                             } catch (e: Exception) {
-                                Toast.makeText(context, "Error en los datos", Toast.LENGTH_SHORT)
+                                Toast.makeText(applicationContext, "Error en los datos", Toast.LENGTH_SHORT)
                                     .show()
                             }
                             DBSQLite!!.updateTarjetaFB(pojo_tarjeta)
                             listPJTarjetasFB!!.add(pojo_tarjeta!!)
                         }
                         setupRefreshRcVw(listPJTarjetasFB!!)
-                        Toast.makeText(context, "Datos Descargados", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Datos Descargados", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -397,7 +394,7 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                             .child(id_lista.toString())
                             .child(constFR.TARJETAS)
                             .setValue(listTarjetas).addOnSuccessListener {
-                                Toast.makeText(context, "Datas Subidos", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, "Datas Subidos", Toast.LENGTH_SHORT).show()
                             }
                     }
                     override fun onCancelled(error: DatabaseError) {
@@ -416,7 +413,7 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                         if (dataSnapshot.exists()) {
                             dataSnapshot.ref.removeValue()
                         }
-                        Toast.makeText(context, "Datos Descargados", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Datos Descargados", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -425,6 +422,8 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                 })
         }
     }
+    */
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -499,60 +498,27 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         val hourdateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH.mm")
         val historial = hourdateFormat.format(date)
 
-        val listPojoTarjeta = DBSQLite!!.getTarjetas(idListSelect)
-        val path = pathHome + "/"+ directorioRandomSD +"/" + DBSQLite!!.getListaName(idListSelect)
+        val cards = db.cardsDAO().getAllByMetadata(idListSelect)
 
+        //Crear directorio
         val exportDir = File(path)
-
         if (!exportDir.exists()) {
             exportDir.mkdirs()
-            Toast.makeText(
-                context,
+            Toast.makeText(applicationContext,
                 "Directorio no existe, se creó uno nuevo",
                 Toast.LENGTH_SHORT
-            )
-                .show()
+            ).show()
         } else {
-            Toast.makeText(context, "Directorio si exiete", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Directorio si exiete", Toast.LENGTH_SHORT).show()
         }
 
-
-        val file = File(
-            path,
-            DBSQLite!!.getListaName(idListSelect)
-                    + "." + historial
-                    + ".csv"
-        )
+        val file = File(path, "${nameFile}.${historial}.${nameFile.split(".").last()}")
 
         file.createNewFile()
-
-        try {
-            val csvWrite = CSVWriter(FileWriter(file.path))
-
-            val arrStrTitulos = arrayOf("PREGUTA;RESPUESTA;DIFICULTAD;OBSERVACION;")
-            csvWrite.writeNext(arrStrTitulos)
-            for (index in listPojoTarjeta.indices) {
-                val arrStr = arrayOf(
-                    listPojoTarjeta[index].pregunta + ";" +
-                            listPojoTarjeta[index].respuesta + ";" +
-                            listPojoTarjeta[index].dificultad + ";" +
-                            listPojoTarjeta[index].detalles
-                )
-                csvWrite.writeNext(arrStr)
-            }
-
-            csvWrite.close()
-
-            Toast.makeText(
-                context,
-                "La base de datos fue exportada Satisfactoriamente",
-                Toast.LENGTH_SHORT
-            ).show()
-        } catch (e: IOException) {
-            Log.d("336 ListActivity.kt", "exportarCSV: " + e)
-            Toast.makeText(context, "Error al exportar los datos", Toast.LENGTH_SHORT).show()
-        }
+        
+        writeTextToFile(file.path, cards)
     }
+/*
 
     fun userFirebase() {
         auth.currentUser?.let {
@@ -573,6 +539,19 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+*/
+
+
+    private fun writeTextToFile(path: String, cards: List<Card>) {
+        val file = File(path)
+        val fileWriter = FileWriter(file, false)
+        val bufferedWriter = BufferedWriter(fileWriter)
+        for (card in cards) {
+            bufferedWriter.append("${card.question!!};${card.answer!!};${card.difficulty!!};${card.details!!};")
+            bufferedWriter.newLine()
+        }
+        bufferedWriter.close()
+    }
 
     private fun inputSearchList() {
         etSearch_LA!!.setOnClickListener {
@@ -592,13 +571,13 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable) {}
             override fun onTextChanged(p0: CharSequence, p1: Int, p2: Int, p3: Int) {
-                val filteredList: ArrayList<Tarjeta> = ArrayList<Tarjeta>()
+                val filteredList: ArrayList<Card> = ArrayList<Card>()
                 if (p0.toString() != "") {
-                    for (item in listTarjetas!!) {
+                    for (item in listCards!!) {
                         if (
-                            item.pregunta!!.toLowerCase(Locale.ROOT)
+                            item.answer!!.toLowerCase(Locale.ROOT)
                                 .contains(p0.toString().toLowerCase(Locale.ROOT))
-                            || item.respuesta?.toLowerCase(Locale.ROOT)
+                            || item.question?.toLowerCase(Locale.ROOT)
                             !!.contains(p0.toString().toLowerCase(Locale.ROOT))
                         ) {
                             filteredList?.add(item)
@@ -606,7 +585,7 @@ class ListActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     setupRefreshRcVw(filteredList)
                 } else {
-                    setupRefreshRcVw(listTarjetas)
+                    setupRefreshRcVw(listCards)
                 }
             }
         })

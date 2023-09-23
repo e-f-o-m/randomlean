@@ -1,28 +1,27 @@
-package com.efom.randomlearn.Adapters.Main
+package com.efom.randomlearn.adapters.main
 
-import android.app.Activity
-import androidx.recyclerview.widget.RecyclerView
-import android.view.ViewGroup
-import android.view.LayoutInflater
-import com.efom.randomlearn.R
-import com.efom.randomlearn.MODELS.Lista
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import com.efom.randomlearn.RandomActivity
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.efom.randomlearn.ListActivity
-import java.util.ArrayList
+import com.efom.randomlearn.models.Metadata
+import com.efom.randomlearn.R
+import com.efom.randomlearn.RandomActivity
 
-class AdapVH_Main(private val c: Context, activity: Activity) :
+class   AdapVH_Main(private val c: Context, activity: Activity) :
     RecyclerView.Adapter<RecyVH_Main>() {
-    private val listMensaje: MutableList<Lista> = ArrayList()
+    private val listMensaje: MutableList<Metadata> = ArrayList()
 
     var recyVH_historial: ArrayList<RecyVH_Main>
     var listContador: ArrayList<IntArray>
     var activity: Activity
 
     //Insertar iten notificar los cambios en el adaptador
-    fun addLista(_Tarjeta: Lista, contador: IntArray) {
+    fun addLista(_Tarjeta: Metadata, contador: IntArray) {
         listMensaje.add(_Tarjeta)
         listContador.add(contador)
         notifyItemInserted(listMensaje.size)
@@ -33,27 +32,24 @@ class AdapVH_Main(private val c: Context, activity: Activity) :
         return RecyVH_Main(view_grupo)
     }
 
-    override fun onBindViewHolder(
-        holder: RecyVH_Main,
-        @SuppressLint("RecyclerView") position: Int
-    ) {
+    override fun onBindViewHolder(holder: RecyVH_Main,  @SuppressLint("RecyclerView") position: Int ) {
         holder.gettVItem_CM().text = (position + 1).toString()
-        holder.tVNombre_CM.text = listMensaje[position].nombre
-        holder.gettVTAprendidos_CM().text = "APRENDIDOS: " + listContador[position][0]
+        holder.tVNombre_CM.text = listMensaje[position].name
+        holder.gettVTAprendidos_CM().text = "Completados: " + listContador[position][0]
         holder.gettVTTotal_CM().text =
-            "ESTUDIANDO: " + (listContador[position][1] - listContador[position][0]) + " / " + listContador[position][1]
+            "Estudiando: " + (listContador[position][1] - listContador[position][0]) + " / " + listContador[position][1]
         holder.imgBtn_edit.setOnClickListener {
             val intent = Intent(c.applicationContext, ListActivity::class.java)
-            intent.putExtra("id_lista", listMensaje[position].id_lista)
-            intent.putExtra("nombre_lista", listMensaje[position].nombre)
+            intent.putExtra("id_lista", listMensaje[position].idMetadata)
+            intent.putExtra("nombre_lista", listMensaje[position].name)
             c.startActivity(intent)
             activity.finish()
         }
-        holder.imgBtn_play.setOnClickListener {
+        holder.framBtn_play.setOnClickListener {
             if (listContador[position][1] != 0 || listContador[position][0] != 0) {
                 val intent = Intent(c.applicationContext, RandomActivity::class.java)
-                intent.putExtra("id_lista", listMensaje[position].id_lista)
-                intent.putExtra("ruta", listMensaje[position].ruta)
+                intent.putExtra("id_lista", listMensaje[position].idMetadata)
+                intent.putExtra("ruta", listMensaje[position].path)
                 c.startActivity(intent)
                 activity.finish()
             }

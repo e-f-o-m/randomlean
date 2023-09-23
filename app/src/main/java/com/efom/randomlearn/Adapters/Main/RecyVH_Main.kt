@@ -1,14 +1,15 @@
-package com.efom.randomlearn.Adapters.Main
+package com.efom.randomlearn.adapters.main
 
-import androidx.recyclerview.widget.RecyclerView
-import com.efom.randomlearn.R
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
-import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.efom.randomlearn.R
 
 class RecyVH_Main(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val imgBtn_edit: ImageButton
-    val imgBtn_play: ImageButton
+    val framBtn_play: FrameLayout
     val tVNombre_CM: TextView
     private val tVTAprendidos_CM: TextView
     private val tVTTotal_CM: TextView
@@ -27,7 +28,7 @@ class RecyVH_Main(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     init {
         imgBtn_edit = itemView.findViewById(R.id.imgBtn_edit)
-        imgBtn_play = itemView.findViewById(R.id.imgBtn_play)
+        framBtn_play = itemView.findViewById(R.id.framBtn_play)
         tVNombre_CM = itemView.findViewById(R.id.tVNombre_CM)
         tVTAprendidos_CM = itemView.findViewById(R.id.tVTAprendidos_CM)
         tVTTotal_CM = itemView.findViewById(R.id.tVTTotal_CM)

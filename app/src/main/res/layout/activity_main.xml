@@ -9,25 +9,23 @@
         android:id="@+id/rLToolbar_Home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/green"
         android:orientation="horizontal"
-        android:padding="5dp"
-        >
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/title_MA"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
+            android:layout_margin="16dp"
             android:layout_weight="1"
-            android:shadowColor="#9FB3DCCD"
-            android:shadowDx="-1"
-            android:shadowDy="-1"
-            android:shadowRadius="1"
+            android:shadowColor="#9F0062FF"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2"
             android:text="@string/app_name"
-            android:textColor="@color/text_siempre_banco"
-            android:textSize="16sp"
+            android:textColor="@color/primary"
+            android:textSize="19sp"
             android:visibility="visible" />
 
         <EditText
@@ -37,6 +35,7 @@
             android:layout_weight="1"
             android:imeOptions="actionSearch"
             android:inputType="text"
+            android:textColor="@color/text_l"
             android:visibility="visible" />
 
         <ImageButton
@@ -47,15 +46,6 @@
             android:background="@android:drawable/ic_menu_search"
             android:padding="22dp"
             android:rotation="90" />
-
-
-        <ImageButton
-            android:id="@+id/imgVSetting_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="@android:drawable/ic_menu_preferences"
-            android:padding="22dp" />
 
 
     </LinearLayout>
@@ -73,45 +63,42 @@
 
     <LinearLayout
         android:id="@+id/lL_BottonBar"
+        style="@style/green"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        style="@style/green"
-        android:rotation="180"
-        android:rotationY="180"
+        android:orientation="horizontal"
         android:padding="6dp"
-        >
+        android:rotation="180"
+        android:rotationY="180">
 
 
         <ImageButton
             android:id="@+id/imgBtn_NuevaLista_MA"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:background="@drawable/ic_btn_add"
             android:layout_marginHorizontal="16dp"
-            android:rotationX="180"
-            />
+            android:background="@drawable/ic_btn_add"
+            android:rotationX="180" />
 
         <ImageButton
-            android:id="@+id/imgBtn_Cloud_MA"
+            android:id="@+id/imgVSetting_main"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:background="@drawable/ic_btn_cloud"
-            android:layout_marginHorizontal="28dp"
-            android:rotationX="180"
-            />
+            android:layout_marginHorizontal="38dp"
+            android:background="@android:drawable/ic_menu_preferences"
+            android:rotationX="180" />
+
         <ImageButton
             android:id="@+id/imgBtn_Inportar_MA"
             android:layout_width="44dp"
             android:layout_height="28dp"
-            android:background="@drawable/ic_btn_svg"
             android:layout_marginHorizontal="16dp"
-            android:rotationX="180"
-            />
+            android:background="@drawable/ic_btn_svg"
+            android:rotationX="180" />
     </LinearLayout>
 
 </RelativeLayout>

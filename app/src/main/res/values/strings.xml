@@ -1,78 +1,73 @@
 <resources>
     <string name="app_name">Random Learn</string>
-    <string name="text">txt</string>
-    <string name="title_activity_random">RandomActivity</string>
 
     <string name="pregunta">Pregunta</string>
     <string name="respuesta">Respuesta</string>
-    <string name="add_widget">Add widget</string>
 
     <string name="carpeta">RANDOM</string>
 
 
     <string name="dialog_reiniciar_estrellas">Reiniciar dificultad de la lista?</string>
-    <string name="toast_estrellas_reiniciadas">Todos los itens tienen 5 estrellas de dificultad</string>
 
     <string name="separadorDefecto">;</string>
-    <string name="titulo_separador">Caracter Separador de datos</string>
-    <string name="fontSize_Ajustes">Tamaño de la fuente</string>
+    <string name="titulo_separador">Separador</string>
+    <string name="fontSize_Ajustes">Tamaño Fuente</string>
     <string name="fontSize_defecto">16</string>
-    <string name="titulo_tarjetaSiguienteSiempre">La tarjeta siguiente siempre es pregunta</string>
-    <string name="sw_congelarCara">La cara de la tarjeta será fija</string>
-    <string name="titulo_congelarCara">Congelar cara de la tarjeta al avanzar</string>
-    <string name="ch_congelarCara">La cara de la tarjeta será la anteriro</string>
+    <string name="space_learn">Repetición espaciada</string>
     <string name="aceptar">Aceptar</string>
     <string name="contenido_gia">
-        \nCrear una lista desde 0: en el menú principal, tocar el botón +
+        \nPara leer un archivo de texto o CSV se requiere activar los permisos (Permitir administración de todos los archivos) de forma manual
+        \nOtra alternativa es gestionar los archivos dentro de la ruta del aplicativo (ej: Android/data/con.efom.randomlearn/files
         \n
-        \nCargar un CSV: en el menú principal, tocar sobre el botón CSV y buscar en la carpeta RANDOM la carpeta que contiene el archivo.
+        \nEn la ruta principal del dispositivo (home) se crea la ruta donde se guardarán los archivos: /RANDOM
         \n
-        \nCrear un CSV: sobre una hoja de cálculo con las columnas Pregunta y respuesta agregar la información y guardar como CSV UTF-8, posteriormente guardar la carpeta en el dispositivo en la ubicación "memoria interna/RAMDOM/"
-        \n
-        \nCargar imágenes las siguientes formas:
-        \n1. creando una lista desde 0 y utilizando el editor de preguntas de la aplicación donde permite la opción de realizar una foto
-        \n2. Si las imágenes ya están listas moverlas a la carpeta RAMDOM dentro de otra carpeta, luego en el menú principal de la aplicación cargar CSV, las imágenes se cargarán por orden de creación, intercalando entre pregunta y respuesta.
-        \n3. Las imágenes también pueden ser descritas en el CSV y posteriormente realizar los pasos del punto 2.
-        \n
-        \nAlternativas:
-        \n- Es posible crear fórmulas matemáticas en formato $$ LaTex $$ encerrando su contenido con el signo de dólar.
-        \n- El CSV puede tener las columnas adicionales dificultá (5 niveles) y Observación.
-        \n- Se admiten más formatos de texto .txt
         \n- El Widget de la aplicación trabaja con la última lista que ejecutó el usuario.
+        \n
+        \n* Formato de un archivo de texto para carga masiva *
+        \nNo necesariamente de extensión .csv pero, con la siguiente estructura:
+        \n1: pregunta; respuesta
+        \n1.1: Existen otras columnas opcionales como: pregunta; respuesta; dificultad; observación
+        \n2: La segunda forma consiste en saltos de línea, "línea 1: pregunta, línea 2: respuesta, línea 3: en blanco, linea 4: pregunta…"
+        \nEjemplo:
+        \n"Hola en inglés
+        \nHello
+        \n
+        \nPerro en inglés
+        \n…"
+        \nGuardar como CSV UTF-8, separado según la elección en ajustes
+        \n
+        \n* Cargar imágenes *
+        \nCrear y guardar una lista de tarjetas o importar un archivo de carga masiva con el nombre de las imágenes (con el extensión)
     </string>
 
 
     <string name="lista_widget">lista_widget</string>
     <string name="id_lista">id_lista</string>
     <string name="nombre_lista">nombre_lista</string>
-    <string name="temaOscuro">tema_oscuro</string>
     <string name="sw_temaOscuro">Tema Oscuro</string>
+    <string name="type">type</string>
 
     <string-array name="actions">
         <item>Eliminar</item>
         <item>Renombrar</item>
         <item>Exportar</item>
         <item>Dificultad</item>
-        <item>Descargar</item>
-        <item>Subir</item>
     </string-array>
 
     <string-array name="actions_random">
-        <item>Editar pregunta</item>
         <item>Ajustes</item>
+        <item>Primero Pregunta</item>
+        <item>Primero Respuesta</item>
+        <item>Mostrar todos</item>
     </string-array>
 
     <string-array name="actions_order">
         <item>Aleatorio</item>
-        <item>Nombre Acendente</item>
-        <item>Nombre Descendente</item>
-        <item>Fecha Acendente</item>
-        <item>Fecha Descendente</item>
-        <item>Primero Pregunta</item>
-        <item>Primero Respuesta</item>
+        <item>Por Nombre</item>
         <item>Favoritos</item>
         <item>No Favoritos</item>
-        <item>Mostrar todos</item>
+        <item>Aprendizaje Espaciado</item>
+        <item>En orden</item>
     </string-array>
 
     <string-array name="lang_options">

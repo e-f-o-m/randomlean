@@ -1,401 +1,425 @@
 package com.efom.randomlearn
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
-import android.view.animation.LinearInterpolator
-import android.widget.*
 import android.widget.RatingBar.OnRatingBarChangeListener
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DefaultItemAnimator
-import com.efom.randomlearn.Adapters.Random.CardStackAdapter
-import com.efom.randomlearn.Adapters.Random.IClickRandom
-import com.efom.randomlearn.MODELS.Tarjeta
-import com.efom.randomlearn.SQLITE.DBSQLite
-import com.efom.randomlearn.Utiles.CONST
-import com.yuyakaido.android.cardstackview.*
+import com.efom.randomlearn.adapters.random.CardStackAdapter
+import com.efom.randomlearn.adapters.random.IClickRandom
+import com.efom.randomlearn.controllers.RandomController
+import com.efom.randomlearn.models.Card
+import com.efom.randomlearn.database.MyDB
+import com.efom.randomlearn.utils.CONSTS
+import com.efom.randomlearn.utils.DT
+import com.lorentzos.flingswipe.SwipeFlingAdapterView.onFlingListener
 import java.util.*
 import kotlin.math.roundToInt
+import com.efom.randomlearn.databinding.ActivityRandomBinding
+import com.efom.randomlearn.models.Metadata
+import kotlin.collections.ArrayList
 
 
 class RandomActivity : AppCompatActivity() {
-    var id_lista = 0
-    var sizeList = 0
-    var numAleatorio = 0
-    var aprendidos = 0
-    var sinAprender = 0
-    var mostrarTodo = false
-    var position = -1
-    var ruta = ""
+    private lateinit var b: ActivityRandomBinding
 
-    var TVNum_RDA: TextView? = null
-    var tVAprendidos_RDA: TextView? = null
-    var tVObservacion_RDA: TextView? = null
-    var raBrDificultad: RatingBar? = null
-    private var imgActions_RA: ImageView? = null
-    private var iVFavorites_RA: ImageView? = null
-    private var imgOrder_RA: ImageView? = null
-    private var manager: CardStackLayoutManager? = null
-    private var adapter: CardStackAdapter? = null
-    var numAleatorioBundle = Bundle()
-    var listTarjetas: ArrayList<Tarjeta>? = null
-    var DBSQLite: DBSQLite? = null
-    var context: Context? = null
+    private var idMetadata = 0
+    private var sizeList = 0
+    private var position = 0
+    private var aprendidos = 0
+    private var sinAprender = 0
+    private var mostrarTodo = false
+    private var ruta = ""
 
-    //var random: Random? = null
-    var cardStackView: CardStackView? = null
-    lateinit var prefs: SharedPreferences
-    lateinit var editor: SharedPreferences.Editor
-    var order = 0
+    lateinit var cardStackView: CardStackAdapter
+
+    private val numAleatorioBundle = Bundle()
+
+    private lateinit var targets: ArrayList<Card>
+    private lateinit var db: MyDB
+    private lateinit var prefs: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    var orderPref = 0
     private val ES_SIEMPRE_PREGUNTA = "esSiemprePregunta"
-    private val CO: CONST = CONST
 
-    var isFavorite = false
-    var isRBChangeUser = false
-
-    var isQuestion = true
+    private var isFavorite = false
+    private var isRBChangeUser = false
+    private var isQuestion = true
 
     lateinit var textToSpeech: TextToSpeech
 
-    private val TTS_PRE = "tts_pregunta"
-    private val TTS_RES = "tts_respuesta"
-    private var opTtsPre = 0
-    private var opTtsRes = 0
+    private var opTtsQuestionPref = 0
+    private var opTtsResponsePref = 0
+    private var spaceLearnSizePref = 0
+    private var mTheme = 0
+    var type = -1
+    lateinit var metadata: Metadata
+
+    lateinit var ramdomCtlr: RandomController
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_random)
-        setIdViews()
-        context = applicationContext
+        b = ActivityRandomBinding.inflate(layoutInflater)
+        setContentView(b.root)
+
+        db = MyDB.getDB(applicationContext)!!
+        ramdomCtlr = RandomController(applicationContext)
         prefs = getSharedPreferences("mPreferences", MODE_PRIVATE)
         editor = prefs.edit()
-        order = prefs.getInt("order_list", 0)
-        opTtsRes = prefs.getInt(TTS_RES, 0)
-        opTtsPre = prefs.getInt(TTS_PRE, 0)
-
-        DBSQLite = DBSQLite(context)
-
-        textToSpeech = TextToSpeech(applicationContext) { i ->
-            // if No error is found then only it will run
-            if (i != TextToSpeech.ERROR) {
-                if (opTtsPre == 2){
-                    textToSpeech.language = Locale.ROOT
-                } else if (opTtsPre == 1) {
-                    textToSpeech.language = Locale.UK
-                }
-
-                if (opTtsRes == 2) {
-                    textToSpeech.language = Locale.ROOT
-                }else if (opTtsRes == 1) {
-                    textToSpeech.language = Locale.UK
-                }
-            }
-        }
-
-
-        //tema
-        if (prefs.getBoolean(getString(R.string.temaOscuro), true)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
 
         //Generar primer Aleatorio
         if (intent.extras != null) {
-            ruta = intent.getStringExtra("ruta").toString()
-            id_lista = intent.getIntExtra("id_lista", 1)
-            editor = editor.putInt("lista_widget", id_lista)
+            if (prefs.getBoolean(CONSTS.IS_DARK, true)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                mTheme = 0
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                mTheme = 1
+            }
+
+            opTtsResponsePref = prefs.getInt(CONSTS.TTS_RES, 0)
+            opTtsQuestionPref = prefs.getInt(CONSTS.TTS_QUE, 0)
+            spaceLearnSizePref = prefs.getInt(CONSTS.N_SPACE_LEARN, 0)
+
+
+            ruta = intent.getStringExtra(CONSTS.PATH).toString()
+            idMetadata = intent.getIntExtra(CONSTS.ID_LISTA, 1)
+            editor = editor.putInt(CONSTS.LISTA_WIDGET, idMetadata)
+            numAleatorioBundle.putInt(CONSTS.NUMALEATORIO, position)
             editor.apply()
-            actionsMoveCard()
-            nextTarjet()
+            metadata = db.metadataDAO().getById(idMetadata)
+            orderPref = if(metadata.order == null) CONSTS.RANDOM else metadata.order!!
         }
 
-        raBrDificultad!!.onRatingBarChangeListener = OnRatingBarChangeListener { _, rating, _ ->
+        textToSpeech = TextToSpeech(applicationContext) { i ->
+            if (i != TextToSpeech.ERROR) {
+                if (opTtsQuestionPref == 2) {
+                    textToSpeech.language = Locale.ROOT
+                } else if (opTtsQuestionPref == 1) {
+                    textToSpeech.language = Locale.US
+                }
+
+                if (opTtsResponsePref == 2) {
+                    textToSpeech.language = Locale.ROOT
+                } else if (opTtsResponsePref == 1) {
+                    textToSpeech.language = Locale.US
+                }
+            }
+        }
+        
+        actions()
+        startTargets()
+    }
+
+    private fun actions(){
+        b.RaBrDificultad.onRatingBarChangeListener = OnRatingBarChangeListener { _, rating, _ ->
             if (isRBChangeUser)
-                Toast.makeText(
-                    applicationContext,
-                    rating.roundToInt().toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(applicationContext, rating.roundToInt().toString(), Toast.LENGTH_SHORT).show()
         }
 
         //actions toolbar
-        iVFavorites_RA!!.setOnClickListener { v: View? ->
-            if (listTarjetas!![numAleatorio].tipo == CO.FAVORITO) {
-                listTarjetas!![numAleatorio].tipo = CO.TEXTO
-            } else {
-                listTarjetas!![numAleatorio].tipo = CO.FAVORITO
-            }
-            changeFatorite()
+        b.iVFavoritesRA.setOnClickListener {
+            targets[position].favorite = !isFavorite
+            changeFavorite()
         }
 
-        imgActions_RA!!.setOnClickListener { _: View? ->
+        b.imgActionsRA.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Acciones").setItems(R.array.actions_random) { dialog, which ->
                 when (which) {
-                    0 -> editar()
-                    1 -> ajustes()
+                    0 -> goSettings()
+                    1 -> editor.putBoolean(ES_SIEMPRE_PREGUNTA, true).apply()
+                    2 -> editor.putBoolean(ES_SIEMPRE_PREGUNTA, false).apply()
+                    3 -> mostrarTodo = !mostrarTodo
                 }
                 dialog.dismiss()
             }
             builder.create().show()
-
         }
 
-        imgOrder_RA!!.setOnClickListener { _: View? ->
+        b.imgOrderRA.setOnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Ordenar - Filtrar: $order")
+            builder.setTitle("Ordenar - Filtrar: $orderPref")
                 .setItems(R.array.actions_order) { dialog, which ->
-                    when (which) {
-                        0, 1, 2, 3, 4, 7, 8 -> {
-                            order = which
-                        }
-                        5 -> {
-                            editor.putBoolean(ES_SIEMPRE_PREGUNTA, true).apply()
-                        }
-                        6 -> {
-                            editor.putBoolean(ES_SIEMPRE_PREGUNTA, false).apply()
-                        }
-                        9 -> {
-                            mostrarTodo = !mostrarTodo
-                        }
-                        //0 Aleatorio
-                        //1 Nombre Acendente
-                        //2 Nombre Descendente
-                        //3 Fecha Acendente
-                        //4 Fecha Descendente
-                        //5 Primero Pregunta
-                        //6 Primero Respuesta
-                        //7 Favoritos
-                        //8 No Favoritos
-                        //9 Mostrar todos
-                    }
-                    editor.putInt("order_list", order).apply()
-                    actionsMoveCard()
-                    //nextTarjet()
+                    //1 Aleatorio
+                    //2 Por Nombre
+                    //3 Favoritos
+                    //4 No Favoritos
+                    //5 Aprendizaje Espaciado
+                    //6 En orden
+                    Log.i(" 📌 157", "RandomActivity🥚actions🍄valido order: " + which)
+                    orderPref = which
+                    editor.putInt("order_list", orderPref).apply()
+                    startTargets()
                     dialog.dismiss()
                 }
             builder.create().show()
         }
 
-    } //Fin OnCreat
-
-
-    fun editar() {
-        val intent = Intent(context, EditActivity::class.java)
-        intent.putExtra("id_lista", id_lista)
-        intent.putExtra(
-            "id_tarjeta",
-            listTarjetas!![numAleatorioBundle.getInt("numAleatorio")].id_tarjeta
-        )
-        intent.putExtra("ultimo", listTarjetas!![sizeList - 1].id_tarjeta)
-        startActivity(intent)
-    }
-
-    fun verTodasDificultades() {
-        mostrarTodo = !mostrarTodo
-    }
-
-    fun ajustes() {
-        val intent = Intent(context, SettingActivity::class.java)
-        intent.putExtra("id_lista", id_lista)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun actionsMoveCard() {
-
-        listTarjetas = DBSQLite!!.getTarjetasRandom(id_lista, order)
-
-
-        if (listTarjetas!!.size == 0) {
-            Toast.makeText(context, "Sin existencias", Toast.LENGTH_SHORT).show()
-            order = 0
-            listTarjetas = DBSQLite!!.getTarjetasRandom(id_lista, order)
+        b.imgEditRA.setOnClickListener {
+            goEdit()
         }
-        sizeList = listTarjetas!!.size
 
-        for (i in listTarjetas!!.indices) {
-            numAleatorio = 0
-            if (listTarjetas!![i].dificultad > 1.5) {
+        b.imgRecordRA.setOnClickListener {
+            orderPref = if(orderPref == CONSTS.RECORD){
+                CONSTS.SPACELEARN_OPTION
+            }else{
+                CONSTS.RECORD
+            }
+            editor.putInt("order_list", orderPref).apply()
+
+            startTargets()
+        }
+    }
+
+    override fun startActivity(intent: Intent?) {
+        super.startActivity(intent)
+    }
+
+    private fun startTargets() {
+        targets = getData(orderPref)
+
+        aprendidos = 0
+        for (i in targets.indices) {
+            if (targets[i].difficulty!! >= 0.5) {
                 sinAprender++
             } else {
                 aprendidos++
             }
         }
-        if (sinAprender > 0 && !mostrarTodo) {
-            while (listTarjetas!![numAleatorio].dificultad < 1.5 && !mostrarTodo) {
-                numAleatorio = if (numAleatorio < sizeList - 1) numAleatorio + 1 else 0
-            }
-        }
 
-        numAleatorioBundle.putInt("numAleatorio", numAleatorio)
-        isRBChangeUser = false
-        raBrDificultad!!.rating = listTarjetas!![numAleatorio].dificultad.toFloat()
-        isRBChangeUser = true
-        changeFatorite()
-
-        manager = CardStackLayoutManager(this, object : CardStackListener {
-            override fun onCardDragging(direction: Direction, ratio: Float) {
-                //anterior, guardar para acutalizar
-                val k = numAleatorioBundle.getInt("numAleatorio")
-                listTarjetas!![k].dificultad = raBrDificultad!!.rating.toDouble()
-                listTarjetas!![k].tipo = if (isFavorite) {
-                    CO.FAVORITO
-                } else {
-                    CO.TEXTO
-                }
-                changeFatorite()
-            }
-
-            override fun onCardSwiped(direction: Direction) {
-                //Log.d(TAG, "onCardSwiped: p=" + manager.getTopPosition() + " d=" + direction);
-                position = manager!!.topPosition
-                if (direction == Direction.Right) {
-                    nextTarjet()
-                }
-                if (direction == Direction.Top) {
-                    nextTarjet()
-                }
-                if (direction == Direction.Left) {
-                    nextTarjet()
-                }
-                if (direction == Direction.Bottom) {
-                    nextTarjet()
-                }
-                // Paginating
-                if (manager!!.topPosition == adapter!!.itemCount - 1) {
-                    cardStackView?.rewind()
-                    //paginate();
-                }
-            }
-
-            override fun onCardRewound() {}
-            override fun onCardCanceled() {}
-            override fun onCardAppeared(view: View, position: Int) {}
-            override fun onCardDisappeared(view: View, position: Int) {
-                DBSQLite!!.updateTarjeta(listTarjetas!![position])
-            }
-        })
-
-
-        manager!!.setStackFrom(StackFrom.None)
-        manager!!.setVisibleCount(3)
-        manager!!.setTranslationInterval(8.0f)
-        manager!!.setScaleInterval(0.95f)
-        manager!!.setSwipeThreshold(0.3f)
-        manager!!.setMaxDegree(20.0f)
-        manager!!.setDirections(Direction.FREEDOM)
-        manager!!.setCanScrollHorizontal(true)
-        manager!!.setSwipeableMethod(SwipeableMethod.Manual)
-        manager!!.setOverlayInterpolator(LinearInterpolator())
-        adapter = CardStackAdapter(listTarjetas!!, ruta, object : IClickRandom {
-            override fun onItemClick(item: View) {
-                when(item.id){
-                    R.id.imgVTalkQuestion_RD -> talk(listTarjetas!![numAleatorio].pregunta!!)
-                    R.id.imgVTalkResponse_RD -> talk(listTarjetas!![numAleatorio].respuesta!!)
-                }
-            }
-        } )
-
-        cardStackView?.layoutManager = manager
-        cardStackView?.adapter = adapter
-        cardStackView?.itemAnimator = DefaultItemAnimator()
-
-
-        numAleatorioBundle.putInt("numAleatorio", numAleatorio)
-        manager!!.topPosition = numAleatorio
-
+        sizeList = targets.size
+        targets.add(Card())
+        swipeSetup()
+        setTextToViews()
     }
 
     override fun onResume() {
         super.onResume()
-        actionsMoveCard()
-    }
 
-    private fun nextTarjet() {
-        aprendidos = 0
-        sinAprender = 0
-        for (i in listTarjetas!!.indices) {
-            if (listTarjetas!![i].dificultad > 1.5) {
-                sinAprender++
-            } else {
-                aprendidos++
+        if(type == CONSTS.EDIT_CARD && targets.isNotEmpty()){
+            type = -1
+            targets[0] = db.cardsDAO().getById(targets[0].idCard!!)
+            if(targets[0] == null){
+                startTargets()
             }
+            cardStackView.update(targets)
         }
 
-        //Validar si mostrar todos // generar aleatorio
-        numAleatorio = if (numAleatorio < sizeList - 1) numAleatorio + 1 else 0
-        if (sinAprender > 0 && !mostrarTodo) {
-            while (listTarjetas!![numAleatorio].dificultad < 1.5 && !mostrarTodo) {
-                numAleatorio = if (numAleatorio < sizeList - 1) numAleatorio + 1 else 0
-            }
-        }
-        numAleatorioBundle.putInt("numAleatorio", numAleatorio)
-
-        manager!!.topPosition = numAleatorio
         setTextToViews()
     }
 
+    @SuppressLint("ResourceType")
+    private fun getData(_order: Int): ArrayList<Card> {
+        metadata.order = _order
+        db.metadataDAO().update(metadata)
+        if (_order == CONSTS.SPACELEARN_OPTION) {
+            if (spaceLearnSizePref == 0) {
+                goSettings()
+                finish()
+            }
+            b.imgRecordRA.visibility = View.VISIBLE
+            return ramdomCtlr.getSpaceLearn(idMetadata, spaceLearnSizePref)
+        }
+
+        if(_order == CONSTS.RECORD){
+            b.imgRecordRA.visibility = View.VISIBLE
+            return  ramdomCtlr.getCardsByRecord(idMetadata, DT.startDay())
+        }
+
+        b.imgRecordRA.visibility = View.GONE
+        return ramdomCtlr.getCardByOrder(idMetadata, _order)
+    }
+
+    @SuppressLint("ResourceType")
+    private fun swipeSetup() {
+        removeCompleted()
+
+        cardStackView = CardStackAdapter(applicationContext, targets, ruta,mTheme, object : IClickRandom {
+            override fun onItemClick(item: View) {
+                when (item.id) {
+                    R.id.imgVTalkQuestion_RD -> talk(targets[position].question!!)
+                    R.id.imgVTalkResponse_RD -> talk(targets[position].answer!!)
+                }
+
+            }
+        })
+
+        b.cardStackView.adapter = cardStackView
+
+        b.cardStackView.setFlingListener(object : onFlingListener {
+            override fun removeFirstObjectInAdapter() {
+                buildSetDB()
+                targets.removeAt(0)
+                isQuestion = true
+                nextTarget()
+                cardStackView.update(targets)
+            }
+
+            override fun onLeftCardExit(dataObject: Any) {
+                b.cardStackView.topCardListener.selectLeft()
+            }
+
+            override fun onRightCardExit(dataObject: Any) {
+                b.cardStackView.topCardListener.selectRight()
+            }
+
+            override fun onAdapterAboutToEmpty(itemsInAdapter: Int) {
+                //cardStackView.update()
+            }
+
+            override fun onScroll(p0: Float) {
+            }
+        })
+
+        b.cardStackView.setOnItemClickListener { itemPosition, dataObject ->
+            val view = b.cardStackView.selectedView
+            val RLTarjetaPregunta_RD = view.findViewById(R.id.RLTarjetaPregunta_RD) as CardView
+            val RLTarjetaRespuesta_RD = view.findViewById(R.id.RLTarjetaRespuesta_RD) as CardView
+
+
+            rotateAnimation(RLTarjetaRespuesta_RD, RLTarjetaPregunta_RD)
+            isQuestion = !isQuestion
+        }
+    }
+
+    private fun nextTarget() {
+
+        if (!mostrarTodo) {
+            removeCompleted()
+        }
+        if (targets.size == 1) {
+            startTargets()
+            return
+        }
+        setTextToViews()
+    }
+
+    private fun removeCompleted(){
+        if (!mostrarTodo) {
+            //Desde la posición siguiente hacia adalante
+            while (targets.size > 1) {
+                if (targets[position].difficulty!! < 1) {
+                    targets.removeAt(position)
+                } else {
+                    break
+                }
+            }
+        }
+    }
+
+    private fun buildSetDB() {
+        if (targets.size > 0) {
+            val k = numAleatorioBundle.getInt("numAleatorio")
+            if(b.RaBrDificultad.rating.toDouble() != targets[k].difficulty){
+                if(b.RaBrDificultad.rating.toDouble() < 1){
+                    aprendidos++
+                }
+            }
+            targets[k].difficulty = b.RaBrDificultad.rating.toDouble()
+
+
+            targets[k].favorite = isFavorite
+            db.cardsDAO().update(targets[k])
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun setTextToViews() {
-        tVAprendidos_RDA!!.text = "$aprendidos / ${listTarjetas!!.size}"
-        TVNum_RDA!!.text = (numAleatorio).toString()
-        tVObservacion_RDA!!.text = "" + listTarjetas!![numAleatorio].detalles
-        changeFatorite()
+        b.TVAprendidosRDA.text = "$aprendidos / ${sizeList}"
+        b.TVNumRDA.text = (sizeList - targets.size + 2).toString()
         isRBChangeUser = false
-        raBrDificultad!!.rating = listTarjetas!![numAleatorio].dificultad.toFloat()
-        isRBChangeUser = true
 
-        if (opTtsPre > 0 && isQuestion){
-            talk(listTarjetas!![numAleatorio].pregunta!!)
-        } else if (opTtsRes > 0 && !isQuestion){
-            talk(listTarjetas!![numAleatorio].respuesta!!)
+        if (targets.size > 1) {
+            changeFavorite()
+            b.RaBrDificultad.rating = targets[position].difficulty!!.toFloat()
+            isRBChangeUser = true
+            if (opTtsQuestionPref > 0 && isQuestion) {
+                talk(targets[position].question!!)
+            } else if (opTtsResponsePref > 0 && !isQuestion) {
+                talk(targets[position].answer!!)
+            }
         }
     }
-    fun talk (text:String){
-        if (opTtsPre == 2 || opTtsRes == 2){
+
+    private fun rotateAnimation(back: View, front: View) {
+        val scale = applicationContext.resources.displayMetrics.density
+        front.cameraDistance = 8000 * scale
+        back.cameraDistance = 8000 * scale
+
+        // Now we will set the front animation
+        val front_animation = AnimatorInflater.loadAnimator(
+            applicationContext,
+            R.animator.front_animator
+        ) as AnimatorSet
+        val back_animation = AnimatorInflater.loadAnimator(
+            applicationContext,
+            R.animator.back_animator
+        ) as AnimatorSet
+
+        if (isQuestion) {
+            front_animation.setTarget(front)
+            back_animation.setTarget(back)
+            front_animation.start()
+            back_animation.start()
+        } else {
+            front_animation.setTarget(back)
+            back_animation.setTarget(front)
+            back_animation.start()
+            front_animation.start()
+        }
+    }
+
+    private fun talk(text: String) {
+        if (opTtsQuestionPref == 2 || opTtsResponsePref == 2) {
             textToSpeech.language = Locale.ROOT
-        } else if (opTtsPre == 1 || opTtsRes == 1){
-            textToSpeech.language = Locale.UK
+        } else if (opTtsQuestionPref == 1 || opTtsResponsePref == 1) {
+            textToSpeech.language = Locale.US
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null, null);
-        } else {
-            textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null);
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    private fun changeFavorite() {
+        if (targets.size > 1) {
+            if (targets[position].favorite!!) {
+                b.iVFavoritesRA.background = ContextCompat.getDrawable(this, R.drawable.ic_heart)
+                isFavorite = true
+            } else {
+                b.iVFavoritesRA.background =
+                    ContextCompat.getDrawable(this, R.drawable.ic_heart_not)
+                isFavorite = false
+            }
         }
     }
 
-    fun changeFatorite() {
-        if (listTarjetas!![numAleatorio].tipo == CO.FAVORITO) {
-            iVFavorites_RA!!.background = ContextCompat.getDrawable(this, R.drawable.ic_heart)
-            isFavorite = true
-        } else {
-            iVFavorites_RA!!.background = ContextCompat.getDrawable(this, R.drawable.ic_heart_not)
-            isFavorite = false
-        }
+    private fun goEdit() {
+        type = CONSTS.EDIT_CARD
+        val intent = Intent(applicationContext, EditActivity::class.java)
+        intent.putExtra("id_lista", idMetadata)
+        intent.putExtra("id_tarjeta", targets[0].idCard)
+        intent.putExtra("ultimo", targets[targets.size-1].idCard)
+        intent.putExtra(getString(R.string.type), CONSTS.EDIT_CARD)
+        startActivity(intent)
     }
 
-
-    private fun setIdViews() {
-        //switchTodos_RDA = findViewById<View>(R.id.SwitchTodos_RDA) as Switch
-        TVNum_RDA = findViewById<View>(R.id.TVNum_RDA) as TextView
-        tVAprendidos_RDA = findViewById<View>(R.id.TVAprendidos_RDA) as TextView
-        tVObservacion_RDA = findViewById<View>(R.id.tVObservacion_RDA) as TextView
-        imgOrder_RA = findViewById<View>(R.id.imgOrder_RA) as ImageView
-        imgActions_RA = findViewById<View>(R.id.imgActions_RA) as ImageView
-        raBrDificultad = findViewById<View>(R.id.RaBrDificultad) as RatingBar
-        cardStackView = findViewById(R.id.card_stack_view2)
-        iVFavorites_RA = findViewById(R.id.iVFavorites_RA)
+    private fun goSettings() {
+        val intent = Intent(applicationContext, SettingActivity::class.java)
+        intent.putExtra("id_lista", idMetadata)
+        startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {

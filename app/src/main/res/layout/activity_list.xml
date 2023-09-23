@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_main"
-    android:orientation="vertical">
+    android:background="@color/background">
 
     <LinearLayout
-        android:id="@+id/rLToolbar_LA"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_tolboard"
+        style="@style/green"
         android:elevation="10dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/title_LA"
@@ -23,7 +26,9 @@
             android:layout_weight="1"
             android:text="@string/app_name"
             android:textSize="16sp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:textColor="@color/text_siempre_banco"
+            />
 
         <EditText
             android:id="@+id/etSearch_LA"
@@ -45,7 +50,6 @@
 
 
         <ImageButton
-            android:id="@+id/imgVSetting_LA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
@@ -63,31 +67,6 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingTop="16dp"
-		android:gravity="center_horizontal"
-		>
-
-        <ImageButton
-            android:id="@+id/imgBtnAdd_LA"
-            android:layout_width="@dimen/widthIcosLista"
-            android:layout_height="@dimen/heiIcosLista"
-            android:layout_marginHorizontal="@dimen/marginV_icosList"
-            android:background="@drawable/ic_btn_add" />
-
-        <ImageButton
-            android:visibility="gone"
-            android:id="@+id/imgBtnNLearnDay_LA"
-            android:layout_width="@dimen/widthIcosLista"
-            android:layout_height="@dimen/heiIcosLista"
-            android:layout_marginHorizontal="@dimen/marginV_icosList"
-            android:layout_toEndOf="@+id/imgBtnAdd_LA"
-            android:background="@android:drawable/ic_input_add" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 		android:paddingTop="16dp">
 
@@ -99,4 +78,20 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <ImageView
+            android:id="@+id/imgBtnAdd_LA"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/add"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            />
+    </FrameLayout>
+
+</RelativeLayout>

@@ -1,222 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingActivity"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/background"
-    >
+    android:orientation="vertical">
+
     <FrameLayout
-        android:id="@+id/fL_gia_sett"
+        android:id="@+id/fLGiaSA"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <LinearLayout
-            android:id="@+id/LL_gia_Sett"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            >
+            android:padding="10dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/contenido_gia"
-                >
-            </TextView>
+                android:textColor="@color/text_d"
+                />
         </LinearLayout>
     </FrameLayout>
 
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/green"
+        android:elevation="10dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/title_LA"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="Ajustes"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="19sp"
+            android:visibility="visible"
+            android:textColor="@color/text_siempre_banco"
+            />
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tVRuta_AA"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ruta"
-                android:layout_marginTop="@dimen/topSetting"
                 style="@style/mTextSetting"
-                />
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/titulo_separador"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <EditText
-                android:id="@+id/eTSeparador_Sett"
-                android:layout_width="84dp"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:hint="@string/separadorDefecto"
-                android:textColorHint="@color/text_hint"
-                android:textColor="@color/text_d"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fontSize_Ajustes"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <EditText
-                android:id="@+id/eTFontSize_Sett"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:inputType="number"
-                android:hint="@string/fontSize_defecto"
-                android:textColorHint="@color/text_hint"
-                android:textColor="@color/text_d"
-                />
+                android:padding="@dimen/topSetting"
+                android:text="Ruta" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ECECEC"
-                android:layout_marginTop="28dp"
-                />
-
-            <TextView
-                android:id="@+id/tVTituloFijado_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/titulo_tarjetaSiguienteSiempre"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <Switch
-                android:id="@+id/sWFijarCara_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="rtl"
-                android:hint="@string/sw_congelarCara"
-                android:textColorHint="@color/text_hint"
-                android:textColor="@color/text_hint"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ECECEC"
-                android:layout_marginTop="14dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/titulo_congelarCara"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <CheckBox
-                android:id="@+id/cBLibreCara_Sett"
+            <soup.neumorphism.NeumorphCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/ch_congelarCara"
-                android:layout_marginLeft="4dp"
-                android:textColorHint="@color/text_hint"
-                />
+                app:neumorph_shadowElevation="2dp"
+                android:layout_margin="0dp"
+                style="@style/CustomShapeAppearance"
+                >
 
-            <View
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/titulo_separador"
+                        tools:ignore="RtlSymmetry" />
+
+                    <soup.neumorphism.NeumorphCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        app:neumorph_shapeType="pressed"
+                        app:neumorph_shadowElevation="2dp"
+                        android:padding="8dp"
+                        android:layout_weight="1"
+                        style="@style/CustomShapeAppearance"
+                        >
+
+                        <EditText
+                            android:id="@+id/eTSeparador_SA"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorTransp"
+                            android:hint=";"
+                            android:padding="9dp"
+                            android:textColor="@color/text_l"
+                            android:textColorHint="@color/text_l"
+                            android:textColorLink="@color/colorTransp"
+                            android:textSize="20sp" />
+
+                    </soup.neumorphism.NeumorphCardView>
+                </LinearLayout>
+
+            </soup.neumorphism.NeumorphCardView>
+
+
+            <soup.neumorphism.NeumorphCardView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ECECEC"
-                android:layout_marginTop="28dp"
-                />
+                android:layout_height="wrap_content"
+                app:neumorph_shadowElevation="2dp"
+                android:layout_margin="0dp"
+                style="@style/CustomShapeAppearance"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/fontSize_Ajustes"
+                        tools:ignore="RtlSymmetry" />
+
+                    <soup.neumorphism.NeumorphCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        app:neumorph_shapeType="pressed"
+                        app:neumorph_shadowElevation="2dp"
+                        android:padding="8dp"
+                        android:layout_weight="1"
+                        style="@style/CustomShapeAppearance"
+                        >
+
+                        <EditText
+                            android:id="@+id/eTFontSize_SA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorTransp"
+                            android:padding="9dp"
+                            android:textColor="@color/text_l"
+                            android:textColorHint="@color/text_l"
+                            android:textColorLink="@color/colorTransp"
+                            android:hint="@string/fontSize_defecto"
+                            android:inputType="number"
+                            android:textSize="20sp" />
+
+                    </soup.neumorphism.NeumorphCardView>
+                </LinearLayout>
+
+            </soup.neumorphism.NeumorphCardView>
 
 
-            <TextView
-                android:id="@+id/tVTituloTema_Sett"
-                android:layout_width="wrap_content"
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tema"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <Switch
-                android:id="@+id/sWTema_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="rtl"
-                android:hint="@string/sw_temaOscuro"
-                android:textColorHint="@color/text_hint"
-                android:textColor="@color/text_hint"
-                />
+                app:neumorph_shadowElevation="2dp"
+                android:layout_margin="0dp"
+                style="@style/CustomShapeAppearance"
+                >
 
-            <TextView
-                android:id="@+id/tVTituloTTS_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pronunciar las tarjetas P/R"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <Spinner
-                android:id="@+id/sPPreguntaTTS_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            <TextView
-                android:id="@+id/tVTituloTTSARes_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Respuesta"
-                android:layout_marginTop="@dimen/topSetting"
-                style="@style/mTextSetting"
-                />
-            <Spinner
-                android:id="@+id/sPRespuestaTTS_Sett"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/space_learn"
+                        tools:ignore="RtlSymmetry" />
+
+                    <soup.neumorphism.NeumorphCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        app:neumorph_shapeType="pressed"
+                        app:neumorph_shadowElevation="2dp"
+                        android:padding="8dp"
+                        android:layout_weight="1"
+                        style="@style/CustomShapeAppearance"
+                        >
+
+                        <EditText
+                            android:id="@+id/eTNSpaceLearn_SA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@color/colorTransp"
+                            android:padding="9dp"
+                            android:textColor="@color/text_l"
+                            android:textColorHint="@color/text_l"
+                            android:textColorLink="@color/colorTransp"
+                            android:inputType="number"
+                            android:hint="0"
+                            android:textSize="20sp" />
+
+                    </soup.neumorphism.NeumorphCardView>
+                </LinearLayout>
+
+            </soup.neumorphism.NeumorphCardView>
 
 
-            <Button
-                android:id="@+id/btnGia_Sett"
-                android:layout_width="wrap_content"
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Guía"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="50dp"
-                android:background="@drawable/btn_primary"
-                android:textColor="@color/primary"
-                android:shadowColor="@color/primary"
-                android:shadowDx="0.1"
-                android:shadowDy="0.1"
-                android:shadowRadius="0.2"
-                />
+                app:neumorph_shadowElevation="2dp"
+                android:padding="19dp"
+                style="@style/CustomShapeAppearance"
+                >
 
-            <Button
-                android:id="@+id/btnAcepar_Sett"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+
+                    <Switch
+                        android:id="@+id/sWTema_SA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:hint="@string/sw_temaOscuro"
+                        android:layoutDirection="rtl"
+                        android:textColor="@color/text_hint"
+                        android:textColorHint="@color/text_hint" />
+                </LinearLayout>
+            </soup.neumorphism.NeumorphCardView>
+
+
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/aceptar"
-                android:layout_marginTop="24dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/btn_success"
-                android:textColor="@color/success"
-                android:paddingHorizontal="35dp"
-                android:shadowColor="#000000"
-                android:shadowDx="0.1"
-                android:shadowDy="0.1"
-                android:shadowRadius="0.1"
-                />
+                app:neumorph_shadowElevation="2dp"
+                android:padding="19dp"
+                style="@style/CustomShapeAppearance"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    >
 
+                    <TextView
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/topSetting"
+                        android:text="Pronunciar las tarjetas P/R" />
+
+                    <Spinner
+                        android:id="@+id/sPPreguntaTTS_SA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp" />
+
+                    <TextView
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/topSetting"
+                        android:text="Respuesta" />
+
+                    <Spinner
+                        android:id="@+id/sPRespuestaTTS_SA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+            </soup.neumorphism.NeumorphCardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <soup.neumorphism.NeumorphButton
+                    android:id="@+id/btnGia_SA"
+                    style="@style/CustomNeuButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:paddingHorizontal="50dp"
+                    app:neumorph_shadowElevation="2dp"
+                    android:text="Guía"
+                    android:textColor="@color/text_d" />
+
+                <soup.neumorphism.NeumorphButton
+                    android:id="@+id/btnAcepar_SA"
+                    style="@style/CustomNeuButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    app:neumorph_shadowElevation="2dp"
+                    android:text="@string/aceptar"
+                    android:textColor="@color/text_d" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

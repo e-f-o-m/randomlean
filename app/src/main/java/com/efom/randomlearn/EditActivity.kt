@@ -1,14 +1,14 @@
 package com.efom.randomlearn
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -16,46 +16,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.efom.randomlearn.MODELS.Tarjeta
-import com.efom.randomlearn.SQLITE.DBSQLite
-import com.efom.randomlearn.Utiles.CONST
-import com.efom.randomlearn.Utiles.DataController
-import yuku.ambilwarna.AmbilWarnaDialog
-import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
+import com.efom.randomlearn.models.Card
+import com.efom.randomlearn.utils.CONSTS
+import com.efom.randomlearn.controllers.DataController
+import com.efom.randomlearn.utils.DT
+import com.efom.randomlearn.database.MyDB
+import com.efom.randomlearn.databinding.ActivityEditBinding
+import com.efom.randomlearn.models.Metadata
 import java.io.*
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.SharedPreferences
-import android.util.Log
 
-class EditActivity : AppCompatActivity(), View.OnClickListener{
-    //Vistas
-    private var raBrDificultadEd: RatingBar? = null
-    private var etPreguntaEd: EditText? = null
-    private var etRespuestaEd: EditText? = null
-    private var etObservacionEd: EditText? = null
-    private var imgBtnCameraPregunta_Ed: ImageButton? = null
-    private var imgBtnCameraRespuesta_Ed: ImageButton? = null
-    private var btnEliminarEd: Button? = null
-    private var btnColorEd: Button? = null
-    private var btnAplicarEd: Button? = null
-    private var btnCancelarEd: Button? = null
-    private var btnSiguienteEd: Button? = null
-    private var fLInfoMasivo_AE: FrameLayout? = null
-    private var imgBtnInfo_EA: ImageView? = null
-    private var cbNuevoEd: CheckBox? = null
-    private var cbFormaMasivaEd: CheckBox? = null
-    private var DBSQLite: DBSQLite? = null
-    private var context: Context? = null
-    private var id_tarjeta = 0
+class EditActivity : AppCompatActivity() {
+    lateinit var metadata: Metadata
+    lateinit var db: MyDB
+    private var idCard = 0
     private var id_lista = 0
     private var ultimo = -1
-    private var tarjeta: Tarjeta? = null
-    var imgV_captura_EA: ImageView? = null
-    var FL_containerCapture_EA: FrameLayout? = null
+    private var card: Card? = null
     var color = ""
     //donde se guarda la foto
     var rutaFotoPregunta: String? = null
@@ -64,70 +45,76 @@ class EditActivity : AppCompatActivity(), View.OnClickListener{
     private var booFotoPregunta = true
     var prefs: SharedPreferences? = null
     var separador = ";"
-    private lateinit var pathHome: String
-    private lateinit var directorioRandomSD: String
+    lateinit var path: String
+    lateinit var nameFile: String
+    lateinit var b: ActivityEditBinding
+    var type = -1
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit)
+        b = ActivityEditBinding.inflate(layoutInflater)
+        setContentView(b.root)
+        db = MyDB.getDB(applicationContext)!!
         prefs = getSharedPreferences("mPreferences", MODE_PRIVATE)
         separador = prefs!!.getString("separador", ";").toString()
-        pathHome = prefs!!.getString("path_home", ";").toString()
-        directorioRandomSD = getString(R.string.carpeta)
 
-        asignarVistas()
-        directorioRandomSD = getString(R.string.carpeta)
-        tarjeta = Tarjeta()
-        context = applicationContext
-        DBSQLite = DBSQLite(context)
+        actions()
+        card = Card()
         if (intent.extras != null) {
-            id_tarjeta = intent.getIntExtra("id_tarjeta", -1)
+            idCard = intent.getIntExtra("id_tarjeta", -1)
             id_lista = intent.getIntExtra("id_lista", -1)
             ultimo = intent.getIntExtra("ultimo", -1)
-            if(id_tarjeta != -1){
+            type = intent.getIntExtra(getString(R.string.type), -1)
+            Log.i(" 📌 68", "EditActivity🥚onCreate🍄type: " + type)
+            if(idCard != -1){
                 setDataViews()
             }
+            metadata = db.metadataDAO().getById(id_lista)
         }
-        if (ultimo == -1) {
-            cbNuevoEd!!.isChecked = true
-            tarjeta!!.color = "#00BD72"
-            tarjeta!!.dificultad = 5.0
-            tarjeta!!.detalles = "-"
-            raBrDificultadEd!!.rating = tarjeta!!.dificultad.toFloat()
-            etObservacionEd!!.setText("-")
+        if (ultimo == -1 && type != CONSTS.EDIT_CARD) {
+            b.cbNuevoEd.isChecked = true
+            card!!.difficulty = 5.0
+            card!!.details  =  "-"
+            b.raBrDificultadEd.rating = card!!.difficulty!!.toFloat()
         }
         checkExternalStoragePermission()
         getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.let { deleteImgOld(it) }
+        path = metadata.path.toString()
+        nameFile = metadata.name.toString()
     }
 
-    //PETICIÓN Y RELLENAR CAMPOS
     private fun setDataViews() {
-        tarjeta = DBSQLite!!.getTarjeta(id_lista, id_tarjeta)
-        etPreguntaEd!!.setText(tarjeta?.pregunta, TextView.BufferType.EDITABLE)
-        etRespuestaEd!!.setText(tarjeta?.respuesta, TextView.BufferType.EDITABLE)
-        etObservacionEd!!.setText(tarjeta?.detalles, TextView.BufferType.EDITABLE)
-        cambiarColorBoton(tarjeta?.color)
-        raBrDificultadEd!!.rating = (tarjeta?.dificultad?.toFloat() ?: 5.0) as Float
+        card = db.cardsDAO().getById(idCard)
+        b.etPreguntaEd.setText(card?.question, TextView.BufferType.EDITABLE)
+        b.etRespuestaEd.setText(card?.answer, TextView.BufferType.EDITABLE)
+        b.raBrDificultadEd.rating = (card?.difficulty?.toFloat() ?: 5.0).toFloat()
+        b.etTypeAE.isChecked = card!!.type == CONSTS.SPACE_REPEAT_DB
     }
 
-    //TODO Enviar sqlite - firebase (aceptar o aplicar)
-    private fun enviarDatos() {
-        tarjeta = asignarPojoTarjeta()
-        if (cbNuevoEd!!.isChecked) {
-            if (cbFormaMasivaEd!!.isChecked){
-                val dataController = DataController()
-                val inputString: Reader = StringReader(tarjeta!!.pregunta)
-                Log.d("119 EditActivity.kt", "enviarDatos: "+tarjeta!!.pregunta)
-                val reader = BufferedReader(inputString)
+    private fun clearDataViews() {
+        b.etPreguntaEd.setText("", TextView.BufferType.EDITABLE)
+        b.etRespuestaEd.setText("", TextView.BufferType.EDITABLE)
+        b.raBrDificultadEd.rating = 5.0f
+        b.etTypeAE.isChecked = card!!.type == CONSTS.TEXTO_DB
+    }
+
+    private fun sendData() {
+        buildCard()
+        if (b.cbNuevoEd.isChecked) {
+            card!!.idCard = null
+             if (b.cbFormaMasivaEd.isChecked ) {val dataController = DataController()
+                val inputString: Reader = StringReader(card!!.question)
+                 val reader = BufferedReader(inputString)
                 val listaTarjetas = dataController.getTransformDataMassive(reader, separador, id_lista)
-                DBSQLite!!.addTarjetas(listaTarjetas)
+                db.cardsDAO().insertAll (listaTarjetas)
             }else{
-                DBSQLite!!.addTarjeta(tarjeta!!)
+                 db.cardsDAO().insert(card!!)
             }
         } else {
-            DBSQLite!!.updateTarjeta(tarjeta!!)
+            db.cardsDAO().update(card!!)
         }
-        //insert Firestore
+            //insert Firestore
         /*
         val tarjeta = hashMapOf(
                 "id_tarjeta"  to _tarjeta!!.id_tarjeta,
@@ -141,129 +128,118 @@ class EditActivity : AppCompatActivity(), View.OnClickListener{
                 .set(tarjeta)*/
     }
 
-    // DIALOGO SELECTOR DE COLOR HEXADECIMAL
-    private fun openDialogColor(supportsAlpha: Boolean) {
-        val dialog = AmbilWarnaDialog(this, ContextCompat.getColor(applicationContext, R.color.colorAccent), supportsAlpha, object : OnAmbilWarnaListener {
-            override fun onOk(dialog: AmbilWarnaDialog, color: Int) {
-                this@EditActivity.color = "#" + Integer.toHexString(color).substring(2)
-                cambiarColorBoton(this@EditActivity.color)
-            }
-
-            override fun onCancel(dialog: AmbilWarnaDialog) {}
-        })
-        dialog.show()
+    private fun buildCard() {
+            card!!.idCard     = idCard
+            card!!.idMetadata = id_lista
+            card!!.question   = b.etPreguntaEd.text.toString().trim()
+            card!!.answer     = b.etRespuestaEd.text.toString().trim()
+            card!!.difficulty = b.raBrDificultadEd.rating.toDouble()
+            card!!.favorite = false
+            card!!.details    = ""
     }
 
-        //fixme: pojo tarjeta set db
-    private fun asignarPojoTarjeta(): Tarjeta {
-        return Tarjeta(
-            id_tarjeta,
-            id_lista,
-            -1,
-            etPreguntaEd!!.text.toString().trim { it <= ' ' },
-            etRespuestaEd!!.text.toString().trim { it <= ' ' },
-            "#ffffff",
-            raBrDificultadEd!!.rating.toDouble(),
-            etObservacionEd!!.text.toString().trim { it <= ' ' },
-            CONST.TEXTO,
-            "",
-            "",
-            CONST.ACTIVO
-        )
-    }
-
-    private fun cambiarColorBoton(colorHex: String?) {
-        if (colorHex != null) {
-            btnColorEd!!.setBackgroundColor(Color.parseColor(colorHex))
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.btnEliminarEd -> {
-                try {
-                    File(Environment.getExternalStorageDirectory().toString() + "/" + directorioRandomSD + "/" + DBSQLite!!.getListaName(id_lista) + "/" +
-                            tarjeta!!.pregunta).delete()
-                    File(Environment.getExternalStorageDirectory().toString() + "/" + directorioRandomSD + "/" + DBSQLite!!.getListaName(id_lista) + "/" +
-                            tarjeta!!.respuesta).delete()
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun actions() {
+            b.btnEliminarEd.setOnClickListener {
+                /*try {
+                    //FIXME File(path + "/" + card!!.answer).delete()
+                    //File(path + "/" + metadata.name + "/" + card!!.question).delete()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                }
-                DBSQLite!!.deleteTarjeta(tarjeta!!.id_tarjeta)
-                id_tarjeta = DBSQLite!!.nextIdTarjeta(tarjeta!!.id_lista, tarjeta!!.id_tarjeta + 1, ultimo)
-                setDataViews()
-                Toast.makeText(context, "Eliminado", Toast.LENGTH_SHORT).show()
-                if(id_tarjeta != -1){
+                }*/
+                db.cardsDAO().delete(card!!)
+
+                val cardT = db.cardsDAO().getNext(card!!.idCard!!, card!!.idMetadata!!)
+                if(cardT != null){
+                    Log.i(" 📌 157", "EditActivity🥚actions🍄senddata")
+                    idCard = cardT.idCard!!
                     setDataViews()
                 }else{
+                    Log.i(" 📌 157", "EditActivity🥚actions🍄bacpress: ")
                     onBackPressed()
                 }
             }
-            R.id.btnAplicarEd -> {
+            b.btnAplicarEd.setOnClickListener {
                 if (rutaFotoPregunta != null) {
                     moverFoto(rutaFotoPregunta!!)
                 }
                 if (rutaFotoRespuesta != null) {
                     moverFoto(rutaFotoRespuesta!!)
                 }
-                enviarDatos()
+                sendData()
                 onBackPressed()
             }
-            R.id.btnSiguienteEd -> {
+            b.btnSiguienteEd.setOnClickListener {
                 if (rutaFotoPregunta != null) {
                     moverFoto(rutaFotoPregunta!!)
                 }
                 if (rutaFotoRespuesta != null) {
                     moverFoto(rutaFotoRespuesta!!)
                 }
-                enviarDatos()
-                id_tarjeta = DBSQLite!!.nextIdTarjeta(tarjeta!!.id_lista, tarjeta!!.id_tarjeta + 1, ultimo)
-                if(id_tarjeta != -1){
-                    setDataViews()
+                sendData()
+
+                if(card!!.idCard != null){
+                    val cardT = db.cardsDAO().getNext(card!!.idCard!!, card!!.idMetadata!!)
+                    if(cardT != null){
+                        idCard = cardT.idCard!!
+                    }
+
+                    if(idCard != -1){
+                        setDataViews()
+                    }else{
+                        onBackPressed()
+                    }
                 }else{
-                    onBackPressed()
+                    clearDataViews()
                 }
             }
-            R.id.btnCancelarEd -> onBackPressed()
-            R.id.btnColorEd -> openDialogColor(false)
-            R.id.imgBtnCameraPregunta_Ed -> {
+            b.btnCancelarEd.setOnClickListener { onBackPressed() }
+            b.imgBtnCameraPreguntaEd.setOnClickListener {
                 booFotoPregunta = true
                 dispatchTakePictureIntent()
             }
-            R.id.imgBtnCameraRespuesta_Ed -> {
+            b.imgBtnCameraRespuestaEd.setOnClickListener {
                 booFotoPregunta = false
                 dispatchTakePictureIntent()
             }
-            R.id.imgV_captura_EA -> {
+            b.imgVCapturaEA.setOnClickListener {
             }
-            R.id.imgBtnInfo_EA -> {
-                fLInfoMasivo_AE!!.visibility = View.VISIBLE
+            b.imgBtnInfoEA.setOnClickListener {
+                b.fLInfoMasivoAE.visibility = View.VISIBLE
             }
-            R.id.fLInfoMasivo_AE -> {
-                fLInfoMasivo_AE!!.visibility = View.GONE
+            b.fLInfoMasivoAE.setOnClickListener {
+                b.fLInfoMasivoAE.visibility = View.GONE
             }
-            R.id.cbFormaMasivaEd -> {
-                if (cbFormaMasivaEd!!.isChecked){
-                    cbNuevoEd!!.isChecked = true
-                    btnColorEd!!.visibility = View.GONE
-                    imgBtnCameraPregunta_Ed!!.visibility = View.GONE
-                    imgBtnCameraRespuesta_Ed!!.visibility = View.GONE
-                    imgV_captura_EA!!.visibility = View.GONE
-                    etRespuestaEd!!.visibility = View.GONE
-                    raBrDificultadEd!!.visibility = View.GONE
-                    etObservacionEd!!.visibility = View.GONE
+            b.cbFormaMasivaEd.setOnClickListener {
+                if (b.cbFormaMasivaEd.isChecked){
+                    b.cbNuevoEd.isChecked = true
+                    b.imgBtnCameraPreguntaEd.isEnabled = false
+                    b.imgBtnCameraRespuestaEd.isEnabled = false
+                    b.imgVCapturaEA.isEnabled = false
+                    b.etRespuestaEd.isEnabled = false
+                    b.raBrDificultadEd.isEnabled = false
+                    b.etTypeAE.isChecked = false
+                    b.etTypeAE.isEnabled = false
                 } else {
-                    btnColorEd!!.visibility = View.VISIBLE
-                    imgBtnCameraPregunta_Ed!!.visibility = View.VISIBLE
-                    imgBtnCameraRespuesta_Ed!!.visibility = View.VISIBLE
-                    imgV_captura_EA!!.visibility = View.VISIBLE
-                    etRespuestaEd!!.visibility = View.VISIBLE
-                    raBrDificultadEd!!.visibility = View.VISIBLE
-                    etObservacionEd!!.visibility = View.VISIBLE
+                    b.imgBtnCameraPreguntaEd.isEnabled = true
+                    b.imgBtnCameraRespuestaEd.isEnabled = true
+                    b.imgVCapturaEA.isEnabled = true
+                    b.etRespuestaEd.isEnabled = true
+                    b.raBrDificultadEd.isEnabled = true
+                    b.etTypeAE.isEnabled = true
                 }
             }
-        }
+            b.etTypeAE.setOnClickListener {
+                if(b.etTypeAE.isChecked){
+                    card!!.type = CONSTS.SPACE_REPEAT_DB
+                    card!!.startDate = DT.startDay()
+                    card!!.endDate = DT.endDay()
+                }else{
+                    card!!.type = CONSTS.TEXTO_DB
+                    card!!.startDate = 0
+                    card!!.endDate = 0
+                }
+            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -273,11 +249,11 @@ class EditActivity : AppCompatActivity(), View.OnClickListener{
             //File f = new File(currentPhotoPath);
             //Uri contentUri = Uri.fromFile(f);
             if (booFotoPregunta) {
-                //imgBtnCameraPregunta_Ed.setImageURI(contentUri);
-                etPreguntaEd!!.setText(currentPhotoName)
+                //b.imgBtnCameraPregunta_Ed.setImageURI(contentUri);
+                b.etPreguntaEd.setText(currentPhotoName)
             } else {
-                //imgBtnCameraRespuesta_Ed.setImageURI(contentUri);
-                etRespuestaEd!!.setText(currentPhotoName)
+                //b.imgBtnCameraRespuesta_Ed.setImageURI(contentUri);
+                b.etRespuestaEd.setText(currentPhotoName)
             }
         }
     }
@@ -332,9 +308,9 @@ class EditActivity : AppCompatActivity(), View.OnClickListener{
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun moverFoto(rutaFoto: String) {
         val origenPath = FileSystems.getDefault().getPath(rutaFoto)
-        val lista = DBSQLite!!.getLista(id_lista)
+        val lista = db.metadataDAO().getById(id_lista)
         val nombre = rutaFoto.split("/")[rutaFoto.split("/").size - 1]
-        val destinoPath = FileSystems.getDefault().getPath(lista?.ruta + "/" + nombre)
+        val destinoPath = FileSystems.getDefault().getPath(lista.path + "/" + nombre)
         try {
             Files.move(origenPath, destinoPath, StandardCopyOption.REPLACE_EXISTING)
         } catch (e: IOException) {
@@ -345,51 +321,26 @@ class EditActivity : AppCompatActivity(), View.OnClickListener{
     private fun deleteImgOld(file: File) {
         if (file.isDirectory) {
             val children = file.list()
-            for (i in children.indices) {
-                File(file, children[i]).delete()
+            if (children != null) {
+                for (i in children.indices) {
+                    File(file, children[i]).delete()
+                }
             }
         }
-    }
-
-    private fun asignarVistas() {
-        raBrDificultadEd = findViewById(R.id.raBrDificultadEd)
-        etPreguntaEd = findViewById(R.id.etPreguntaEd)
-        etRespuestaEd = findViewById(R.id.etRespuestaEd)
-        etObservacionEd = findViewById(R.id.etObservacionEd)
-        btnEliminarEd = findViewById(R.id.btnEliminarEd)
-        cbNuevoEd = findViewById(R.id.cbNuevoEd)
-        cbFormaMasivaEd = findViewById(R.id.cbFormaMasivaEd)
-        btnColorEd = findViewById(R.id.btnColorEd)
-        btnAplicarEd = findViewById(R.id.btnAplicarEd)
-        btnCancelarEd = findViewById(R.id.btnCancelarEd)
-        btnSiguienteEd = findViewById(R.id.btnSiguienteEd)
-        imgBtnInfo_EA = findViewById(R.id.imgBtnInfo_EA)
-        fLInfoMasivo_AE = findViewById(R.id.fLInfoMasivo_AE)
-        imgBtnCameraPregunta_Ed = findViewById(R.id.imgBtnCameraPregunta_Ed)
-        imgBtnCameraRespuesta_Ed = findViewById(R.id.imgBtnCameraRespuesta_Ed)
-        imgV_captura_EA = findViewById(R.id.imgV_captura_EA)
-        FL_containerCapture_EA = findViewById(R.id.FL_containerCapture_EA)
-
-        btnEliminarEd!!.setOnClickListener(this)
-        btnColorEd!!.setOnClickListener(this)
-        btnAplicarEd!!.setOnClickListener(this)
-        btnCancelarEd!!.setOnClickListener(this)
-        btnSiguienteEd!!.setOnClickListener(this)
-        fLInfoMasivo_AE!!.setOnClickListener(this)
-        imgBtnInfo_EA!!.setOnClickListener(this)
-        imgBtnCameraPregunta_Ed!!.setOnClickListener(this)
-        imgBtnCameraRespuesta_Ed!!.setOnClickListener(this)
-        imgV_captura_EA!!.setOnClickListener(this)
-        cbFormaMasivaEd!!.setOnClickListener(this)
     }
 
     override fun onBackPressed() {
         if(ultimo != -1){
             super.onBackPressed()
         }else{
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.putExtra("id_lista", id_lista)
-            startActivity(intent)
+            if(type == CONSTS.EDIT_CARD){
+                super.onBackPressed()
+                finish()
+            }else{
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.putExtra("id_lista", id_lista)
+                startActivity(intent)
+            }
         }
         finish()
     }

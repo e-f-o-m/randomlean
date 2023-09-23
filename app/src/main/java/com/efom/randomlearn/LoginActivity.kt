@@ -9,7 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.efom.randomlearn.Utiles.ConstFIREBASE
+import com.efom.randomlearn.utils.ConstFIREBASE
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.IgnoreExtraProperties
@@ -43,7 +43,8 @@ class LoginActivity : AppCompatActivity() {
 
 
         dbFrb = Firebase.database.reference
-        constFR = ConstFIREBASE()
+        constFR = ConstFIREBASE
+        
         auth = FirebaseAuth.getInstance()
 
         showHiddenViews(true)

@@ -14,7 +14,7 @@
       android:pathData="m117.768,299.778 -3.4,-99.069 -92.31,0.588 4.116,-44.685 2.352,-48.213 85.254,1.176 -1.176,-104.069 92.898,1.176 -9,105.245 95.25,-2.352 -1.176,51.741 -1.176,43.509 -94.074,-6.468 6.468,107.597 -50.565,6.468h-35.866z"
       android:strokeLineJoin="miter"
       android:strokeWidth="1"
-      android:fillColor="#fff"
-      android:strokeColor="#000000"
+      android:fillColor="#B3FAFAFA"
+      android:strokeColor="#80000000"
       android:strokeLineCap="butt"/>
 </vector>

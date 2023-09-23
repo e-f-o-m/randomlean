@@ -1,129 +1,127 @@
 package com.efom.randomlearn
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
-import android.content.Intent
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import com.efom.randomlearn.utils.CONSTS
+import com.efom.randomlearn.databinding.ActivitySettingBinding
 
 class SettingActivity : AppCompatActivity() {
+    private lateinit var b: ActivitySettingBinding
+
+    val TTS_PRE = "tts_pregunta"
+    val TTS_RES = "tts_respuesta"
+    var opTtsPre = 0
+    var opTtsRes = 0
+    private lateinit var prefs: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
-        val eTSeparador_Sett: EditText = findViewById(R.id.eTSeparador_Sett)
-        val eTFontSize_Sett: EditText = findViewById(R.id.eTFontSize_Sett)
-        val sWFijarCara_Sett: Switch = findViewById(R.id.sWFijarCara_Sett)
-        val sWTema_Sett: Switch = findViewById(R.id.sWTema_Sett)
-        val sPPreguntaTTS_Sett: Spinner = findViewById(R.id.sPPreguntaTTS_Sett)
-        val sPRespuestaTTS_Sett: Spinner = findViewById(R.id.sPRespuestaTTS_Sett)
-        val cBLibreCara_Sett: CheckBox = findViewById(R.id.cBLibreCara_Sett)
-        val btnAcepar_Sett: Button = findViewById(R.id.btnAcepar_Sett)
-        val btnGia_Sett: Button = findViewById(R.id.btnGia_Sett)
-        val tVTituloFijado_Sett: TextView = findViewById(R.id.tVTituloFijado_Sett)
-        val tVRuta_AA: TextView = findViewById(R.id.tVRuta_AA)
-        val fL_gia_sett: FrameLayout = findViewById(R.id.fL_gia_sett)
+        b = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(b.root)
 
-        val prefs: SharedPreferences = getSharedPreferences("mPreferences", MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = prefs.edit()
+        prefs = getSharedPreferences("mPreferences", MODE_PRIVATE)
+        editor = prefs.edit()
+
+        /* TALK SETTINGS */
+        val languages = resources.getStringArray(R.array.lang_options)
+        val adapter = ArrayAdapter(this, R.layout.menu_tv, languages)
+        b.sPPreguntaTTSSA.adapter = adapter
+        b.sPRespuestaTTSSA.adapter = adapter
+
+        opTtsRes = prefs.getInt(TTS_RES, 0)
+        opTtsPre = prefs.getInt(TTS_PRE, 0)
+        b.sPPreguntaTTSSA.setSelection(opTtsPre)
+        b.sPRespuestaTTSSA.setSelection(opTtsRes)
 
         //Definir? tema
-        if (prefs.getBoolean(getString(R.string.temaOscuro), true)) {
+        if (prefs.getBoolean(CONSTS.IS_DARK, true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
-        eTFontSize_Sett.setText("" + prefs.getInt("fontsize", 16))
-        eTSeparador_Sett.setText(prefs.getString("separador", null))
-        sWFijarCara_Sett.isChecked = prefs.getBoolean(ES_SIEMPRE_PREGUNTA, true)
-        sWTema_Sett.isChecked = prefs.getBoolean(getString(R.string.temaOscuro), true)
-        cBLibreCara_Sett.isChecked = prefs.getBoolean(ES_CONGELAR_CARA, false)
+        b.eTFontSizeSA.setText(prefs.getInt("fontsize", 16).toString())
+        b.eTSeparadorSA.setText(prefs.getString("separador", null))
+
+        b.eTNSpaceLearnSA.setText(prefs.getInt(CONSTS.N_SPACE_LEARN, 0).toString())
+
+
+        b.sWTemaSA.isChecked = prefs.getBoolean(CONSTS.IS_DARK, true)
 
         editor.apply()
-        if (sWFijarCara_Sett.isChecked) {
-            tVTituloFijado_Sett.text = "La tarjeta siguiente siempre es pregunta"
+
+        if (b.sWTemaSA.isChecked) {
+            b.sWTemaSA.text = "Tema Nocturno"
         } else {
-            tVTituloFijado_Sett.text = "La tarjeta siguiente siempre es respuesta"
+            b.sWTemaSA.text = "Tema Claro"
         }
-        if (sWTema_Sett.isChecked) {
-            sWTema_Sett.text = "Tema Nocturno"
-        } else {
-            sWTema_Sett.text = "Tema Claro"
-        }
-        sWFijarCara_Sett.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                tVTituloFijado_Sett.text = "La tarjeta siguiente siempre es pregunta"
+
+
+        val path = getExternalFilesDir("")!!.path.split("/0/").toTypedArray()[1]
+        b.tVRutaAA.text = path
+
+        actions()
+    }
+
+    fun actions(){
+        b.sWTemaSA.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (b.sWTemaSA.isChecked) {
+                b.sWTemaSA.text = "Tema Nocturno"
             } else {
-                tVTituloFijado_Sett.text = "La tarjeta siguiente siempre es respuesta"
+                b.sWTemaSA.text = "Tema Claro"
             }
-        })
-        sWTema_Sett.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            if (sWTema_Sett.isChecked) {
-                sWTema_Sett.text = "Tema Nocturno"
-            } else {
-                sWTema_Sett.text = "Tema Claro"
-            }
-        })
+            editor.putBoolean(CONSTS.IS_DARK, isChecked).apply()
 
-        val languages = resources.getStringArray(R.array.lang_options)
-        if (sPPreguntaTTS_Sett != null && sPRespuestaTTS_Sett != null) {
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
-            sPPreguntaTTS_Sett.adapter = adapter
-            sPRespuestaTTS_Sett.adapter = adapter
-            sPPreguntaTTS_Sett.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    editor.putInt(TTS_PRE, position)
-                }
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            recreate()
+        }
+
+        /* TALK */
+        b.sPPreguntaTTSSA.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                editor.putInt(TTS_PRE, position)
             }
-            sPRespuestaTTS_Sett.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    editor.putInt(TTS_RES, position)
-                }
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+        }
+        b.sPRespuestaTTSSA.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                editor.putInt(TTS_RES, position)
             }
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
 
 
-        cBLibreCara_Sett.setOnCheckedChangeListener { _, isChecked ->
-            sWFijarCara_Sett.isChecked = !isChecked
-            sWFijarCara_Sett.isEnabled = !isChecked
-        }
-        btnAcepar_Sett.setOnClickListener(View.OnClickListener {
-            editor.putString("separador", eTSeparador_Sett.text.toString().trim { it <= ' ' })
-            editor.putBoolean(ES_SIEMPRE_PREGUNTA, sWFijarCara_Sett.isChecked)
-            editor.putBoolean(getString(R.string.temaOscuro), sWTema_Sett.isChecked)
-            editor.putBoolean(ES_CONGELAR_CARA, cBLibreCara_Sett.isChecked)
-            editor.putInt(
-                "fontsize",
-                eTFontSize_Sett.text.toString().trim { it <= ' ' }.toInt()
-            )
+        /* ACCEPT */
+
+        b.btnAceparSA.setOnClickListener {
+            editor.putString("separador", b.eTSeparadorSA.text.toString().trim { it <= ' ' })
+            editor.putBoolean(CONSTS.IS_DARK, b.sWTemaSA.isChecked)
+            editor.putInt("fontsize", b.eTFontSizeSA.text.toString().trim().toInt())
+            editor.putInt(CONSTS.N_SPACE_LEARN, b.eTNSpaceLearnSA.text.toString().trim().toInt())
             editor.apply()
             onBackPressed()
-        })
-        btnGia_Sett.setOnClickListener { v: View? ->
-            fL_gia_sett.visibility = View.VISIBLE
         }
-        fL_gia_sett.setOnClickListener { v: View? ->
-            fL_gia_sett.visibility = View.GONE
+
+        /* GUIA */
+        b.btnGiaSA.setOnClickListener { v: View? ->
+            b.fLGiaSA .visibility = View.VISIBLE
         }
-        val path = getExternalFilesDir("")!!.path.split("/0/").toTypedArray()[1]
-        tVRuta_AA.text = path
+        b.fLGiaSA.setOnClickListener { v: View? ->
+            b.fLGiaSA.visibility = View.GONE
+        }
     }
+
+
 
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-    companion object {
-        private const val ES_CONGELAR_CARA = "congelarCara"
-        private const val TTS_PRE = "tts_pregunta"
-        private const val TTS_RES = "tts_respuesta"
-        private const val ES_SIEMPRE_PREGUNTA = "esSiemprePregunta"
     }
 }

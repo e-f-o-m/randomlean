@@ -7,9 +7,10 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -22,11 +23,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         >
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBa"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"
             android:name=".ListsWebActivity"
             >
@@ -34,29 +35,16 @@
         </activity>
         <activity android:name=".LoginActivity" android:exported="true" />
 
-            <!--
-        <receiver android:name=".WidgetPreguntas">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/preguntas_widget_info" />
-        </receiver>
-                -->
-
         <activity
             android:name=".SettingActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBa"
+            android:theme="@style/AppTheme.NoActionBar"
             />
-            <!--android:noHistory="false"-->
-            <!--android:screenOrientation="fullSensor"-->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBa">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -66,7 +54,7 @@
         <activity
             android:name=".ListActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBa"
+            android:theme="@style/AppTheme.NoActionBar"
             android:requestLegacyExternalStorage="true"
             />
 
@@ -74,7 +62,9 @@
         <activity
             android:name=".RandomActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBa" />
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+
         <activity android:name=".EditActivity" />
 
         <provider

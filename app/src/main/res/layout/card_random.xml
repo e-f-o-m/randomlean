@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    >
+
+    <!--Respuesta-->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/RLTarjetaRespuesta_RD"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_margin="4dp"
+        android:clickable="false"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="8dp"
+        >
+        <RelativeLayout
+            android:id="@+id/rlQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            >
+
+            <TextView
+                android:id="@+id/tVRespuesta_RD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="@color/text_l"
+                android:textSize="18sp"
+                android:text="res"
+                />
+
+            <ImageView
+                android:id="@+id/imgVRespuesta_RD"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:textAlignment="viewEnd"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imgVTalkResponse_RD"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@android:drawable/ic_lock_silent_mode_off"
+                android:backgroundTint="@color/text_hint"
+                android:padding="8dp"
+                android:textAlignment="viewEnd" />
+
+            <TextView
+                android:id="@+id/tVBarRespuesta_RDA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_horizontal"
+                android:text="RESPUESTA"
+                style="@style/title_shadow"
+                android:textSize="17sp"
+                android:layout_marginTop="8dp"
+                />
+        </RelativeLayout>
+        <!--TARJETA-->
+
+    </androidx.cardview.widget.CardView>
+
+
+    <!--Pregunta-->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/RLTarjetaPregunta_RD"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="8dp"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rlResponse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            >
+
+            <TextView
+                android:id="@+id/tVPregunta_RD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/aceptar"
+                android:textAlignment="center"
+                android:textColor="@color/text_l"
+                android:textSize="18sp"
+                android:transformPivotX="0dp" />
+
+            <ImageView
+                android:id="@+id/imgVPregunta_RD"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:textAlignment="viewEnd"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imgVTalkQuestion_RD"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentEnd="true"
+                android:background="@android:drawable/ic_lock_silent_mode_off"
+                android:backgroundTint="@color/text_hint"
+                android:padding="8dp"
+                android:layout_marginRight="16dp"
+                android:textAlignment="viewEnd" />
+
+            <TextView
+                android:id="@+id/tVBarPregunta_RDA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="6dp"
+                android:gravity="center_horizontal"
+                android:text="PREGUNTA"
+                style="@style/title_shadow"
+                android:shadowRadius="2"
+                android:textSize="17sp"
+                />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</RelativeLayout>

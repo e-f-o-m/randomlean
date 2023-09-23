@@ -1,10 +1,10 @@
-package com.efom.randomlearn.Adapters.Web
+package com.efom.randomlearn.adapters.web
 
-import androidx.recyclerview.widget.RecyclerView
-import com.efom.randomlearn.R
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.efom.randomlearn.R
 
 class RecyVH_Web(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val imgBtn_edit: ImageButton
@@ -27,7 +27,7 @@ class RecyVH_Web(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     init {
         imgBtn_edit = itemView.findViewById(R.id.imgBtn_edit)
-        imgBtn_play = itemView.findViewById(R.id.imgBtn_play)
+        imgBtn_play = itemView.findViewById(R.id.framBtn_play)
         tVNombre_CM = itemView.findViewById(R.id.tVNombre_CM)
         tVTAprendidos_CM = itemView.findViewById(R.id.tVTAprendidos_CM)
         tVTTotal_CM = itemView.findViewById(R.id.tVTTotal_CM)

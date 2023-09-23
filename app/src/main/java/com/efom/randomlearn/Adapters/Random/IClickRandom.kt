@@ -1,4 +1,4 @@
-package com.efom.randomlearn.Adapters.Random
+package com.efom.randomlearn.adapters.random
 
 import android.view.View
 

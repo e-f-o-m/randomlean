@@ -1,28 +1,26 @@
-package com.efom.randomlearn.Adapters.Web
+package com.efom.randomlearn.adapters.web
 
 import android.app.Activity
-import androidx.recyclerview.widget.RecyclerView
-import com.efom.randomlearn.Adapters.Main.RecyVH_Main
-import com.efom.randomlearn.MODELS.Tarjeta
-import com.efom.randomlearn.Utiles.CallBackAdapter
-import android.view.ViewGroup
-import android.view.LayoutInflater
-import com.efom.randomlearn.R
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
-import java.lang.RuntimeException
-import java.util.ArrayList
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.efom.randomlearn.adapters.main.RecyVH_Main
+import com.efom.randomlearn.models.Card
+import com.efom.randomlearn.R
+import com.efom.randomlearn.adapters.CallBackAdapter
 
 class AdapVH_Web(private val c: Context, activity: Activity) : RecyclerView.Adapter<RecyVH_Main>() {
-    private val listMensaje: MutableList<Tarjeta> = ArrayList()
+    private val listMensaje: MutableList<Card> = ArrayList()
     var recyVH_historial: ArrayList<RecyVH_Main>
     var activity: Activity
     private var mListener: CallBackAdapter? = null
     var nombre = ""
 
     //Insertar iten notificar los cambios en el adaptador
-    fun addLista(_Tarjeta: Tarjeta) {
-        listMensaje.add(_Tarjeta)
+    fun addLista(_Card: Card) {
+        listMensaje.add(_Card)
         notifyItemInserted(listMensaje.size)
     }
 
@@ -38,7 +36,7 @@ class AdapVH_Web(private val c: Context, activity: Activity) : RecyclerView.Adap
         holder.gettVTAprendidos_CM().text = "APRENDIDOS: " + 0
         holder.gettVTTotal_CM().text = "ESTUDIANDO: " + 0 + " / " + 0
         holder.imgBtn_edit.visibility = View.GONE
-        holder.imgBtn_play.setOnClickListener { mListener!!.intrfClick(position) }
+        holder.framBtn_play.setOnClickListener { mListener!!.intrfClick(position) }
         recyVH_historial.add(holder)
     }
 

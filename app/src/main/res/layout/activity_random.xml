@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:auto="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_main"
-    android:clipToPadding="false">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="19dp"
-        android:layout_above="@+id/lLModification"
-        android:layout_marginBottom="45dp"
-        android:elevation="14dp"
-        >
-        <TextView
-            android:id="@+id/tVObservacion_RDA"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Observación"
-            android:textColor="@color/text_l"
-            android:background="@color/colorTransp"
-            />
-    </FrameLayout>
-
+    android:clipToPadding="false"
+    android:background="@color/background"
+    >
 
     <RelativeLayout
         android:id="@+id/RLToolbar_RDA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/green"
+        android:padding="8dp"
         >
 
         <TextView
-            android:id="@+id/TVAprendidos_RDA"
+            android:id="@+id/TVAprendidosRDA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:text="00/00"
-            android:textColor="@color/text_l" />
+            android:textColor="@color/text_siempre_banco" />
 
         <ImageButton
-            android:id="@+id/imgOrder_RA"
+            android:id="@+id/imgRecordRA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/imgEditRA"
+            android:background="#000000ff"
+            android:src="@android:drawable/ic_menu_recent_history"
+
+            />
+
+        <ImageButton
+            android:id="@+id/imgEditRA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/imgOrderRA"
+            android:background="#000000ff"
+            android:src="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/imgOrderRA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_toStartOf="@+id/imgActions_RA"
             android:background="#000000ff"
-            android:src="@android:drawable/ic_menu_sort_by_size"
-            />
+            android:src="@android:drawable/ic_menu_sort_by_size" />
 
         <ImageButton
             android:id="@+id/imgActions_RA"
@@ -68,31 +71,32 @@
 
     <TextView
         android:id="@+id/TVNum_RDA"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/RLToolbar_RDA"
         android:layout_centerHorizontal="true"
-        android:background="@color/background"
         android:gravity="center"
         android:text="Actual00"
         android:textColor="@color/text_l"
         android:textStyle="bold"
-
+        android:padding="4dp"
         />
+
+
     <!--TOOLBAR-->
-
-
-    <com.yuyakaido.android.cardstackview.CardStackView
-        android:id="@+id/card_stack_view2"
+    <com.lorentzos.flingswipe.SwipeFlingAdapterView
+        android:id="@+id/cardStackView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/lLModification"
         android:layout_below="@+id/TVNum_RDA"
+        android:layout_alignParentEnd="true"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="-2dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="6dp"
-        android:clipToPadding="false" />
+        android:layout_marginBottom="10dp"
+        android:clipToPadding="false"
+        app:max_visible="1" />
 
     <LinearLayout
         android:id="@+id/lLModification"
@@ -101,12 +105,11 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="14dp"
         android:gravity="center"
         >
         <ImageView
-            android:id="@+id/iVFavorites_RA"
+            android:id="@+id/iVFavoritesRA"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="16dp"
@@ -120,7 +123,7 @@
             android:layout_height="wrap_content"
             android:progressDrawable="@drawable/ratingbar_difficulty"
             android:stepSize="0.5"
-            android:rating="3"
+            android:rating="0"
             android:numStars="5"
             android:scaleX="1"
             android:scaleY="1"
@@ -128,6 +131,7 @@
             android:gravity="center"
             android:textAlignment="center"
             android:paddingTop="12dp"
+            android:isIndicator="false"
             />
 
 

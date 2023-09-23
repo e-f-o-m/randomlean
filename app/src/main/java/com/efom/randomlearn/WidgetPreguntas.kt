@@ -9,10 +9,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.RemoteViews
-import com.efom.randomlearn.MODELS.Tarjeta
-import com.efom.randomlearn.SQLITE.DBSQLite
+import com.efom.randomlearn.database.MyDB
+import com.efom.randomlearn.models.Card
 import org.apache.commons.lang3.BooleanUtils
 import java.util.*
+import kotlin.collections.ArrayList
 
 class WidgetPreguntas : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
@@ -56,10 +57,10 @@ class WidgetPreguntas : AppWidgetProvider() {
         lateinit var appWidgetIds: IntArray
         private val random = Random()
         private var sizeArray = 0
-        private var id_lista = 0
+        private var idMetadata = 0
         private var prefs: SharedPreferences? = null
-        private var listTarjetas: ArrayList<Tarjeta>? = null
-        private var db_sqlite: DBSQLite? = null
+        lateinit var listCards: ArrayList<Card>
+        lateinit var db : MyDB
         fun getRefreshPendingIntent(context: Context?, esNext: String?): PendingIntent {
             val intent = Intent(context, WidgetPreguntas::class.java)
             intent.action = esNext
@@ -72,24 +73,24 @@ class WidgetPreguntas : AppWidgetProvider() {
             view.setOnClickPendingIntent(R.id.appwidget_tipo_PoR, getRefreshPendingIntent(context, ACTION_FALSE))
             view.setOnClickPendingIntent(R.id.appwidget_pregunta_o_respuesta, getRefreshPendingIntent(context, ACTION_TRUE))
             prefs = context.getSharedPreferences("mPreferences", Context.MODE_PRIVATE)
-            db_sqlite = DBSQLite(context)
-            id_lista = prefs!!.getInt(context.getString(R.string.lista_widget) , -1)
-            listTarjetas = db_sqlite!!.getTarjetas(id_lista)
-            if (id_lista != -1 && listTarjetas!!.size > 0) {
-                sizeArray = listTarjetas!!.size
+            db = MyDB.getDB(context)!!
+            idMetadata = prefs!!.getInt(context.getString(R.string.lista_widget) , -1)
+            listCards = ArrayList(db.cardsDAO().getAllByMetadata(idMetadata))
+            if (idMetadata != -1 && listCards!!.size > 0) {
+                sizeArray = listCards!!.size
                 if (esNext || numAleatorio == -1) {
                     numAleatorio = random.nextInt(sizeArray)
                     esPregunta = true
                 }
                 if (esPregunta) {
                     view.setTextViewText(R.id.appwidget_tipo_PoR, "Pregunta")
-                    view.setTextColor(R.id.appwidget_tipo_PoR, context.resources.getColor(R.color.colorCardRandom))
-                    view.setTextViewText(R.id.appwidget_pregunta_o_respuesta, listTarjetas!!.get(numAleatorio).pregunta)
+                    view.setTextColor(R.id.appwidget_tipo_PoR, context.resources.getColor(R.color.text_d))
+                    view.setTextViewText(R.id.appwidget_pregunta_o_respuesta, listCards!!.get(numAleatorio).answer)
                     esPregunta = false
                 } else {
                     view.setTextViewText(R.id.appwidget_tipo_PoR, "Respuesta")
                     view.setTextColor(R.id.appwidget_tipo_PoR, context.resources.getColor(R.color.colorPrimary))
-                    view.setTextViewText(R.id.appwidget_pregunta_o_respuesta, listTarjetas!!.get(numAleatorio).respuesta)
+                    view.setTextViewText(R.id.appwidget_pregunta_o_respuesta, listCards!!.get(numAleatorio).question)
                     esPregunta = true
                 }
                 appWidgetManager.updateAppWidget(appWidgetId, view)

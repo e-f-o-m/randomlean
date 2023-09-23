@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tx_black_2">#323232</color>
+
+    <color name="tx_witte_1">#F8F8F8</color>
+
+    <color name="card_dark">#17567C</color>
+    <color name="card_light">#F1F1F1</color>
+
+
+</resources>
