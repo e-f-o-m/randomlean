@@ -10,9 +10,9 @@
     <string name="dialog_reiniciar_estrellas">Reiniciar dificultad de la lista?</string>
 
     <string name="separadorDefecto">;</string>
-    <string name="titulo_separador">Separador</string>
-    <string name="fontSize_Ajustes">Tamaño Fuente</string>
-    <string name="fontSize_defecto">16</string>
+    <string name="separador_c_m">Separador CSV</string>
+    <string name="fontsize_cards">Tamaño fuente tarjetas</string>
+    <string name="font_size_default">16</string>
     <string name="space_learn">Repetición espaciada</string>
     <string name="aceptar">Aceptar</string>
     <string name="contenido_gia">
@@ -44,7 +44,10 @@
     <string name="lista_widget">lista_widget</string>
     <string name="id_lista">id_lista</string>
     <string name="nombre_lista">nombre_lista</string>
-    <string name="sw_temaOscuro">Tema Oscuro</string>
+    <string name="sw_temaOscuro">Tema oscuro</string>
+    <string name="sw_notifications">Notificaciones</string>
+    <string name="notifications_title">Retepir cada</string>
+
     <string name="type">type</string>
 
     <string-array name="actions">

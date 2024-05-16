@@ -1,6 +1,10 @@
 package com.efom.randomlearn
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -95,6 +99,8 @@ class MainActivity : AppCompatActivity() {
 
         validatePermissions()
     }
+
+
 
 
     private fun clicksViews() {

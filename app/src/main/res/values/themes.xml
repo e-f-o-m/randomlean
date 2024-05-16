@@ -45,6 +45,10 @@
     <style name="green">
         <item name="android:background">@drawable/border_tolboard</item>
     </style>
+    <style name="button_day">
+        <item name="android:background">@drawable/btn_day</item>
+        <item name="android:layout_margin">1dp</item>
+    </style>
 
     <color name="background">#F3F3F3</color>
     <color name="shadowColorLight">#F1F1F1</color>

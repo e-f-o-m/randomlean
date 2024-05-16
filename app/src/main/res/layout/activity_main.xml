@@ -99,6 +99,14 @@
             android:layout_marginHorizontal="16dp"
             android:background="@drawable/ic_btn_svg"
             android:rotationX="180" />
+
+        <ImageButton
+            android:id="@+id/imgBtn_play_MA"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/ic_btn_play"
+            android:rotationX="180" />
     </LinearLayout>
 
 </RelativeLayout>

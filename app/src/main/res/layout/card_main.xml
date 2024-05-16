@@ -81,7 +81,7 @@
             android:background="#0AFF0000"
             android:backgroundTint="@color/colorTransp"
             android:padding="16dp"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@drawable/ic_btn_edit"
             />
 
         <FrameLayout

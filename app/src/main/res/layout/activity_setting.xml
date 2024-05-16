@@ -41,7 +41,6 @@
             android:id="@+id/title_LA"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:text="Ajustes"
@@ -63,13 +62,36 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tVRuta_AA"
-                style="@style/mTextSetting"
-                android:layout_width="wrap_content"
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/topSetting"
-                android:text="Ruta" />
+                app:neumorph_shadowElevation="2dp"
+                android:layout_margin="0dp"
+                android:padding="24dp"
+                style="@style/CustomShapeAppearance"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/tVRutaTitle_AA"
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ruta de archivos importados:" />
+                    <TextView
+                        android:id="@+id/tVRuta_AA"
+                        style="@style/mTextSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/"
+                        android:textColor="@color/text_hint"
+                        />
+                </LinearLayout>
+            </soup.neumorphism.NeumorphCardView>
 
 
             <soup.neumorphism.NeumorphCardView
@@ -93,7 +115,7 @@
                         android:gravity="center_vertical"
                         android:paddingStart="16dp"
                         android:layout_weight="1"
-                        android:text="@string/titulo_separador"
+                        android:text="@string/separador_c_m"
                         tools:ignore="RtlSymmetry" />
 
                     <soup.neumorphism.NeumorphCardView
@@ -149,7 +171,7 @@
                         android:gravity="center_vertical"
                         android:paddingStart="16dp"
                         android:layout_weight="1"
-                        android:text="@string/fontSize_Ajustes"
+                        android:text="@string/fontsize_cards"
                         tools:ignore="RtlSymmetry" />
 
                     <soup.neumorphism.NeumorphCardView
@@ -174,7 +196,7 @@
                             android:textColor="@color/text_l"
                             android:textColorHint="@color/text_l"
                             android:textColorLink="@color/colorTransp"
-                            android:hint="@string/fontSize_defecto"
+                            android:hint="@string/font_size_default"
                             android:inputType="number"
                             android:textSize="20sp" />
 
@@ -243,7 +265,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:neumorph_shadowElevation="2dp"
-                android:padding="19dp"
+                android:padding="22dp"
                 style="@style/CustomShapeAppearance"
                 >
 
@@ -257,7 +279,6 @@
                         android:id="@+id/sWTema_SA"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:hint="@string/sw_temaOscuro"
                         android:layoutDirection="rtl"
                         android:textColor="@color/text_hint"
@@ -265,6 +286,135 @@
                 </LinearLayout>
             </soup.neumorphism.NeumorphCardView>
 
+
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:neumorph_shadowElevation="2dp"
+                android:padding="22dp"
+                style="@style/CustomShapeAppearance"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <Switch
+                        android:id="@+id/sWNotifications_AS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/sw_notifications"
+                        android:layoutDirection="rtl"
+                        android:textColor="@color/text_hint"
+                        android:textColorHint="@color/text_hint" />
+
+                    <LinearLayout
+                        android:id="@+id/lLOptionsNotifications_AS"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        >
+                        <!--android:visibility="gone"-->
+
+                        <TextView
+                            style="@style/mTextSetting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:padding="10dp"
+                            android:text="@string/notifications_title"
+                            tools:ignore="RtlSymmetry" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="8dp"
+                            >
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnL_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="L"
+                                android:layout_weight="1"
+                                />
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnM_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="M"
+                                android:layout_weight="1"
+                                />
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnX_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="X"
+                                android:layout_weight="1"
+                                />
+
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnJ_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="J"
+                                android:layout_weight="1"
+                                />
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnV_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="V"
+                                android:layout_weight="1"
+                                />
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnS_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="S"
+                                android:layout_weight="1"
+                                />
+                            <Button
+                                style="@style/button_day"
+                                android:id="@+id/btnD_AS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="D"
+                                android:layout_weight="1"
+                                />
+                        </LinearLayout>
+
+                        <soup.neumorphism.NeumorphButton
+                            style="@style/CustomNeuButton"
+                            android:id="@+id/btnNotificationPicker_AS"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="HH:MM"
+                            app:neumorph_shadowElevation="2dp"
+                            android:textColor="@color/text_d"
+                            />
+                        <soup.neumorphism.NeumorphButton
+                            style="@style/CustomNeuButton"
+                            android:id="@+id/btnSaveNotify_AS"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_d"
+                            app:neumorph_shadowElevation="2dp"
+                            android:text="Guardar"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </soup.neumorphism.NeumorphCardView>
 
             <soup.neumorphism.NeumorphCardView
                 android:layout_width="match_parent"

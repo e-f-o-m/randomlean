@@ -33,4 +33,10 @@ object CONSTS {
     const val EDIT_CARD = 2
     const val RECORD = 6
 
+
+    object PREFERENCE_NOTIFY {
+        const val STATE = "state_notify"
+        const val DAYS = "days_notify"
+        const val HOUR = "hour_notify"
+    }
 }
